@@ -1,0 +1,9 @@
+.contenedor-fondo {
+    background-image: url('../../assets/fondos/fondo.avif');
+    margin: 0;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 50px);;
+}

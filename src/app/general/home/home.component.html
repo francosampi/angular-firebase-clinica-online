@@ -1,0 +1,49 @@
+<div class="container-fluid contenedor-fondo">
+    <div class="d-flex justify-content-center mt-5 shadow">
+        <div class="carousel slide" data-ride="carousel" style="width: 120vh;">
+            <div class="carousel-inner">
+                <div class="carousel-item" [class.active]="activeSlideIndex === 0">
+                    <img class="carrusel-imagen" src="../../../assets/imagenes/imagen-carrusel-1.avif"
+                        alt="Primera imagen">
+                </div>
+                <div class="carousel-item" [class.active]="activeSlideIndex === 1">
+                    <img class="carrusel-imagen" src="../../../assets/imagenes/imagen-carrusel-2.avif"
+                        alt="Segunda imagen">
+                </div>
+                <div class="carousel-item" [class.active]="activeSlideIndex === 2">
+                    <img class="carrusel-imagen" src="../../../assets/imagenes/imagen-carrusel-3.avif"
+                        alt="Tercera imagen">
+                </div>
+            </div>
+            <a class="carousel-control-prev bg-dark" role="button"
+                (click)="activeSlideIndex>0 ? changeSlide(activeSlideIndex - 1) : activeSlideIndex=2">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-next bg-dark" role="button"
+                (click)="activeSlideIndex<2 ? changeSlide(activeSlideIndex + 1) : activeSlideIndex=0">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="p-4 shadow border-top bg-light justify-content-center">
+            <div class="d-flex align-items-center">
+                <img src="../../../assets/iconos/icono-clinica-online.png" width="90px">
+                <h1 class="m-3 text-center">Nuestra clínica online</h1>
+            </div>
+
+            <div class="mb-4">
+                <ul>
+                    <li *ngFor="let item of items">
+                        <img src="../../../assets/iconos/icono-flecha.png" width="32px">
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
+
+            <button *ngIf="!usuarioLogeado" class="btn btn-lg btn-primary mt-4 w-100" routerLink="/login">
+                Accede al portal
+            </button>
+        </div>
+    </div>
+</div>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">

@@ -1,0 +1,39 @@
+<div class="contenedor-fondo">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div class="card shadow">
+                    <div class="card-header text-center p-3">
+                        <h4>Listado de usuarios</h4>
+                    </div>
+                    <div class="lista-scrolleable card-body">
+                        <div *ngFor="let usuario of listaUsuarios" class="card p-2 mx-2 my-3 justify-content-center shadow-sm">
+                            <div class="card-body align-items-center">
+                                <p>Usuario: <b>{{usuario.mail}}</b></p>
+                                <hr>
+                                <p>Perfil: <b>{{usuario.perfil}}</b></p>
+                                <p *ngIf="usuario.especialidad">Especialidad: <b>{{usuario.especialidad}}</b></p>
+
+                                <div *ngIf="usuario.habilitado===true" class="d-flex row align-items-center">
+                                    <p class="col-md-8">
+                                        Estado: <b style="color: forestgreen">HABILITADO</b>
+                                    </p>
+                                    <button class="col-md-4 btn btn-secondary w-25" (click)="habilitarUsuario(usuario.mail, false)">DESHABILITAR</button>
+                                </div>
+                                
+                                <div *ngIf="usuario.habilitado===false" class="d-flex row align-items-center">
+                                    <p class="col-md-8">
+                                        Estado: <b style="color: crimson">SIN HABILITAR</b>
+                                    </p>
+                                    <button class="col-md-4 btn btn-secondary w-25" (click)="habilitarUsuario(usuario.mail, true)">HABILITAR</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

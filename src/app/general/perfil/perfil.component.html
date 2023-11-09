@@ -1,0 +1,33 @@
+<div class="contenedor-fondo">
+    <div class="container d-flex justify-content-center">
+        <div class="card mt-5 w-50 shadow">
+            <div class="card-header">
+                <h3 class="text-center">Mi cuenta</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 d-flex justify-content-center align-items-center">
+                        <img class="foto-perfil shadow" [src]="usuarioFoto">
+                    </div>
+                    <div class="col-md-8 mt-2">
+                        <p>Nombre: <b>{{usuarioDatos?.nombre}}</b></p>
+                        <hr>
+                        <p>Apellido: <b>{{usuarioDatos?.apellido}}</b></p>
+                        <hr>
+                        <p>Mail: <b>{{usuarioDatos?.mail}}</b></p>
+                        <hr>
+                        <p>DNI: <b>{{usuarioDatos?.dni}}</b></p>
+                        <div *ngIf="usuarioDatos?.obraSocial">
+                            <hr>
+                            <p>Obra social: <b>{{usuarioDatos?.obraSocial}}</b></p>
+                        </div>
+                        <div *ngIf="usuarioDatos?.especialidad">
+                            <hr>
+                            <p>Especialidad: <b>{{usuarioDatos?.especialidad}}</b></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
