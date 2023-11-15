@@ -13,6 +13,7 @@ export interface Paciente extends Usuario {
 export interface Especialista extends Usuario {
     especialidad: string;
     habilitado: boolean;
+    disponibilidad: number;
 }
 
 export interface Administrador extends Usuario {

@@ -23,7 +23,24 @@
                         </div>
                         <div *ngIf="usuarioDatos?.especialidad">
                             <hr>
-                            <p>Especialidad: <b>{{usuarioDatos?.especialidad}}</b></p>
+                            <p>Especialidades: <b>{{usuarioDatos?.especialidad}}</b></p>
+                            <hr>
+                            <p>Disponibilidad: <b>{{usuarioDatos?.disponibilidad}} minutos</b></p>
+                            <div>
+                                Asignar disponibilidad horaria:
+
+                                <div class="input-group mb-3">
+                                    <input type="number" class="form-control" placeholder="Ej: 30" min="5"
+                                        [(ngModel)]="disponibilidadHoraria">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">minutos</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-secondary w-100"
+                                    (click)="asignarDisponibilidadHoraria(disponibilidadHoraria)">
+                                    Asignar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -31,3 +48,5 @@
         </div>
     </div>
 </div>
+
+<app-spinner *ngIf="spinner"></app-spinner>

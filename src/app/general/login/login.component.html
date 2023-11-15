@@ -6,35 +6,70 @@
                     <div class="card-header text-center p-3">
                         <h4>Acceso a la clínica online</h4>
                     </div>
+
                     <div class="card-body">
                         <form [formGroup]="form" (ngSubmit)="entrar()">
-                            <div class="my-4">
-                                <div class="form-group">
-                                    <label for="email">Correo electrónico</label>
-                                    <input formControlName="email" type="email" class="form-control shadow-sm" id="email"
-                                        placeholder="Ingresa tu correo electrónico">
+                            <div class="row">
+                                <div class="col-6 my-4">
+                                    <div class="form-group">
+                                        <label for="email">Correo electrónico</label>
+                                        <input formControlName="email" type="email" class="form-control shadow-sm"
+                                            id="email" placeholder="Ingresa tu correo electrónico">
+                                    </div>
+                                    <div class="form-group mt-4">
+                                        <label for="password">Contraseña</label>
+                                        <input formControlName="password" type="password" class="form-control shadow-sm"
+                                            id="password" placeholder="Ingresa tu contraseña">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 btn-block shadow-sm">Iniciar
+                                        sesión</button>
+                                    <p class="text-secondary text-center mt-4 w-100">¿No tienes una cuenta?</p>
+                                    <button type="button" class="btn btn-primary w-100 btn-block shadow-sm"
+                                        routerLink="/registro-perfil">Registrarse</button>
                                 </div>
-                                <div class="form-group mt-4">
-                                    <label for="password">Contraseña</label>
-                                    <input formControlName="password" type="password" class="form-control shadow-sm" id="password"
-                                        placeholder="Ingresa tu contraseña">
+    
+                                <div class="col-6 mt-5">
+                                    <div *ngFor="let administrador of usuariosAccesoRapido.administrador">
+                                        <button type="button" class="btn" (click)="rellenarFormUsuario(administrador)">
+                                            <img [src]="administrador.foto" style="width: 50px; height: 50px; border-radius: 100%;">
+                                        </button>
+                                    </div>
+
+                                    <div class="d-flex row justify-content-start">
+                                        <div class="col" *ngFor="let especialista of usuariosAccesoRapido.especialista">
+                                            <button type="button" class="btn" (click)="rellenarFormUsuario(especialista)">
+                                                <img [src]="especialista.foto" style="width: 50px; height: 50px; border-radius: 100%;">
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex row justify-content-start">
+                                        <div class="col" *ngFor="let usuario of usuariosAccesoRapido.usuario">
+                                            <button type="button" class="btn" (click)="rellenarFormUsuario(usuario)">
+                                                <img [src]="usuario.foto" style="width: 50px; height: 50px; border-radius: 100%;">
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="mt-5">
-                                <button type="submit" class="btn btn-primary w-100 btn-block shadow-sm">Iniciar
-                                    sesión</button>
-                                <p class="text-secondary text-center mt-4 w-100">¿No tienes una cuenta?</p>
-                                <button type="button" class="btn btn-primary w-100 btn-block shadow-sm" routerLink="/registro-perfil">Registrarse</button>
-                            </div>
-
+                            <!--
                             <div class="d-flex row mt-4 justify-content-around">
-                                <button class="btn btn-success col-md-3 btn-block shadow-sm">Accede como
-                                    paciente</button>
-                                <button class="btn btn-success col-md-3 btn-block shadow-sm">Accede como
-                                    especialista</button>
-                                <button class="btn btn-success col-md-3 btn-block shadow-sm">Accede como admin.</button>
+                                <button type="button" class="btn btn-success col-md-3 btn-block shadow-sm"
+                                (click)="rellenarFormPaciente(); entrar();">
+                                    Accede comopaciente
+                                </button>
+
+                                <button type="button" class="btn btn-success col-md-3 btn-block shadow-sm"
+                                (click)="rellenarFormEspecialista(); entrar();">
+                                    Accede como especialista
+                                </button>
+                                <button type="button" class="btn btn-success col-md-3 btn-block shadow-sm"
+                                (click)="rellenarFormAdministrador(); entrar();">
+                                    Accede como admin
+                                </button>
                             </div>
+                            -->
+
                         </form>
                     </div>
                 </div>

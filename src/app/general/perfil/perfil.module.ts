@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PerfilComponent } from './perfil.component';
 import { PerfilRoutingModule } from './perfi-routing-module';
+import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -11,7 +13,9 @@ import { PerfilRoutingModule } from './perfi-routing-module';
   ],
   imports: [
     CommonModule,
-    PerfilRoutingModule
+    PerfilRoutingModule,
+    FormsModule,
+    SpinnerModule
   ],
   exports: [
     PerfilComponent

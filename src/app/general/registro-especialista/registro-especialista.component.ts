@@ -169,7 +169,8 @@ export class RegistroEspecialistaComponent {
         dni: this.form.value.dni,
         especialidad: this.form.value.especialidad,
         mail: this.form.value.mail,
-        habilitado: false
+        habilitado: false,
+        disponibilidad: 30
       };
 
       const foto: any[] = this.perfilImagen1;

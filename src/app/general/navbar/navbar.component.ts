@@ -13,39 +13,43 @@ export class NavbarComponent implements OnInit {
 
   usuarioLogeado: any;
   usuarioFoto: any;
-  usuarioPerfil: string='';
-  spinner: boolean=false;
+  usuarioCredenciales: any;
+  usuarioPerfil: string = '';
+  sidebarAbierta: boolean = false;
+  spinner: boolean = false;
 
-  constructor(private route: Router, private authService: AuthService, private userService: UserService){}
+  constructor(private route: Router, private authService: AuthService, private userService: UserService) { }
 
-  ngOnInit(): void{
-    this.spinner=true;
+  ngOnInit(): void {
+    this.authService.getCurrentUser().subscribe((user) => {
+      this.usuarioLogeado = user;
 
-    this.authService.getCurrentUser().subscribe((user)=>{
-      this.usuarioLogeado=user;
+      if (user) {
+        this.userService.getUserByUid(user?.uid).subscribe((cred) => {
+          if (cred) {
+            this.usuarioCredenciales = cred;
 
-      this.userService.getUserByUid(user.uid).subscribe((cred)=>{
-        this.usuarioPerfil=cred.perfil;
-      });
-
-      this.authService.getUserImagebyUID(user!.uid).subscribe((foto)=>{
-        this.usuarioFoto=foto;
-      });
-
-      this.spinner=false;
+            this.authService.getUserImagebyUID(user?.uid).subscribe((foto) => {
+              if (foto) {
+                this.usuarioFoto = foto;
+              }
+            });
+          }
+        });
+      }
     });
   }
 
-  salir(){
-    this.spinner=true;
+  salir() {
+    this.spinner = true;
 
-    this.authService.cerrarSesion().then(()=>{
+    this.authService.cerrarSesion().then(() => {
       this.route.navigate(['login']);
       Swal.fire('¡Adios!', 'Has cerrado sesión exitosamente', 'success');
-    }).catch(()=>{
+    }).catch(() => {
       Swal.fire('¡Ups!', 'Ha ocurrido un error al cerrar sesión', 'error');
-    }).finally(()=>{
-      this.spinner=false;
+    }).finally(() => {
+      this.spinner = false;
     });
   }
 }

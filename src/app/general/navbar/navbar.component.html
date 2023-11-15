@@ -1,41 +1,15 @@
 <div class="d-flex align-items-center">
-  <div class="navbar-item">
-    <a class="navbar-brand" routerLink="">
-      <img src="../../../assets/iconos/icono-hospital.png" style="width: 45px;">
-    </a>
-  </div>
-
-  <div class="navbar-item">
-    <a class="navbar-brand" routerLink=''>
-      Inicio
-    </a>
-  </div>
-
-  <div *ngIf="usuarioPerfil==='administrador'" class="navbar-item">
-    <a class="navbar-brand" routerLink='/usuarios'>
-      Usuarios
-    </a>
-  </div>
-
-  <div *ngIf="usuarioPerfil!=='especialista'" class="navbar-item">
-    <a class="navbar-brand" routerLink='/turnos'>
-      Turnos
-    </a>
-  </div>
-
   <div class="nav-item navbar-item ms-auto">
     <div *ngIf="usuarioLogeado" class="d-flex row justify-content-center align-items-center">
-      <div class="col">
-        <img [src]="usuarioFoto" class="navbar-imagen-perfil-contenedor">
-      </div>
-      <div class="col dropdown">
-        <button class="btn btn-light shadow dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          Cuenta
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><button class="dropdown-item" routerLink="/perfil">Perfil</button></li>
-          <li><button class="dropdown-item bg-danger" (click)="salir()">Cerrar sesión</button></li>
-        </ul>
+      <div class="d-flex row">
+        <div class="col">
+          <img *ngIf="usuarioFoto" [src]="usuarioFoto" class="navbar-imagen-perfil-contenedor shadow-sm">
+        </div>
+        <div class="col">
+          <p class="fw-bold text-secondary">
+            {{usuarioCredenciales?.nombre}} {{usuarioCredenciales?.apellido}}
+          </p>
+        </div>
       </div>
     </div>
 
@@ -46,5 +20,44 @@
     </div>
   </div>
 </div>
+
+<button *ngIf="!sidebarAbierta" id="toggleSidebar" class="boton-sidebar btn btn-primary shadow-sm"
+  (click)="sidebarAbierta=!sidebarAbierta">
+  >
+</button>
+
+<header *ngIf="sidebarAbierta">
+  <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+    
+    <button class="boton-sidebar btn btn-primary shadow-sm" (click)="sidebarAbierta=false">X</button>
+
+    <div class="position-sticky">
+      <div class="list-group list-group-flush mx-3 mt-4">
+        <a routerLink="" class="list-group-item list-group-item-action py-2 ripple">
+          <img src="../../../assets/iconos/icono-hospital.png" style="width: 25px;">
+          <span class="mx-2">Inicio</span>
+        </a>
+
+        <a *ngIf="usuarioCredenciales?.perfil" routerLink="/perfil" class="list-group-item list-group-item-action py-2 ripple">
+          <span class="mx-2">Perfil</span>
+        </a>
+
+        <a *ngIf="usuarioCredenciales?.perfil!=='especialista'" routerLink="/turnos"
+          class="list-group-item list-group-item-action py-2 ripple">
+          <span class="mx-2">Turnos</span>
+        </a>
+
+        <a *ngIf="usuarioCredenciales?.perfil=='administrador'" routerLink="/usuarios"
+          class="list-group-item list-group-item-action py-2 ripple">
+          <span class="mx-2">Usuarios</span>
+        </a>
+
+        <a *ngIf="usuarioCredenciales?.perfil" (click)="salir()" class="list-group-item list-group-item-action py-2 ripple bg-danger">
+          <span class="mx-2">Cerrar sesión</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
 
 <app-spinner *ngIf="spinner"></app-spinner>

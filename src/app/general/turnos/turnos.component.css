@@ -1,0 +1,5 @@
+.lista-scrolleable {
+    height: 50vh;
+    overflow: auto;
+    background-color: gray;
+}

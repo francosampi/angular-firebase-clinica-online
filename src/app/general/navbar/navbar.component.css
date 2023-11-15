@@ -1,13 +1,63 @@
-.navbar-item{
-    padding: 0.4em;
-    margin: 0.2em;
-    margin-left: 0.5em;
+.navbar-item {
+  padding: 0.4em;
+  margin: 0.2em;
+  margin-left: 0.5em;
 }
 
-.navbar-imagen-perfil-contenedor{
-    width: 60px;
-    height: 60px;
-    border-radius: 100%;
-    object-fit: cover;
-    object-position: center;
+.navbar-imagen-perfil-contenedor {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+body {
+  background-color: #fbfbfb;
+}
+
+@media (min-width: 991.98px) {
+  main {
+    padding-left: 240px;
+  }
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 58px 0 0;
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+  width: 240px;
+  z-index: 600;
+}
+
+.boton-sidebar{
+  position: fixed;
+  top:0;
+  bottom: 0;
+  left: 0;
+  width: 45px;
+  height: 45px;
+  border-radius: 100%;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.list-group-item{
+  cursor: pointer;
 }

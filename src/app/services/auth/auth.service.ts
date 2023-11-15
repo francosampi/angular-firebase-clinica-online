@@ -16,9 +16,6 @@ export class AuthService {
 
   constructor(private auth: AngularFireAuth, private storage: AngularFireStorage, private userService: UserService) {
     this.getCurrentUser().subscribe((user) => {
-
-
-
       if (user) {
         this.usuarioLogeado = user;
         this.userService.getUserByUid(user.uid).subscribe((cred) => {
