@@ -90,7 +90,6 @@ export class RegistroPacienteComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(5)
         ]
       ],
       perfilImagen1: [
@@ -108,21 +107,6 @@ export class RegistroPacienteComponent implements OnInit {
         ]
       ]
     });
-
-    this.generarCaptcha();
-  }
-
-  generarCaptcha() {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let cadenaAleatoria = '';
-    const longitud = 5;
-  
-    for (let i = 0; i < longitud; i++) {
-      const caracterAleatorio = caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-      cadenaAleatoria += caracterAleatorio;
-    }
-  
-    this.captchaGenerado=cadenaAleatoria;
   }
 
   onFileChange(event: any) {
@@ -158,8 +142,8 @@ export class RegistroPacienteComponent implements OnInit {
     return null;
   }
 
-  captchaCorrecto(): boolean{
-      return this.form.value.captcha.toUpperCase() === this.captchaGenerado;
+  captchaCorrecto(): boolean {
+    return this.form.value.captcha.toUpperCase() === this.captchaGenerado;
   }
 
   displayImage(file: File, imageNumber: number) {
@@ -177,40 +161,33 @@ export class RegistroPacienteComponent implements OnInit {
   }
 
   darAltaPaciente() {
-    if (this.captchaCorrecto()){
-      this.spinner = true;
+    this.spinner = true;
 
-      const nuevoPaciente: Paciente = {
-        nombre: this.form.value.nombre,
-        apellido: this.form.value.apellido,
-        edad: this.form.value.edad,
-        dni: this.form.value.dni,
-        obraSocial: this.form.value.obraSocial,
-        mail: this.form.value.mail,
-      };
+    const nuevoPaciente: Paciente = {
+      nombre: this.form.value.nombre,
+      apellido: this.form.value.apellido,
+      edad: this.form.value.edad,
+      dni: this.form.value.dni,
+      obraSocial: this.form.value.obraSocial,
+      mail: this.form.value.mail,
+    };
 
-      const fotos: any[] = [this.perfilImagen1, this.perfilImagen2];  
+    const fotos: any[] = [this.perfilImagen1, this.perfilImagen2];
 
-      this.pacienteService.addPaciente(nuevoPaciente, this.form.value.password, fotos).then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: '¡Listo!',
-          text: 'El paciente se ha subido con éxito',
-        });
-  
-        this.authService.iniciarSesion(nuevoPaciente.mail, this.form.value.password).then(() => {
-          this.router.navigate(['']);
-        });
-      }).catch(() => {
-        Swal.fire('¡Ups!', 'Ocurrió un error al dar de alta al paciente...', 'error');
-      }).finally(() => {
-        this.spinner = false;
+    this.pacienteService.addPaciente(nuevoPaciente, this.form.value.password, fotos).then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Listo!',
+        text: 'El paciente se ha subido con éxito',
       });
-    }
-    else
-    {
-      this.generarCaptcha();
-      Swal.fire('¡Captcha inválido!', 'El captcha no es correcto...', 'warning');
-    }
+
+      this.authService.iniciarSesion(nuevoPaciente.mail, this.form.value.password).then(() => {
+        this.router.navigate(['']);
+      });
+    }).catch(() => {
+      Swal.fire('¡Ups!', 'Ocurrió un error al dar de alta al paciente...', 'error');
+    }).finally(() => {
+      this.spinner = false;
+    });
   }
 }

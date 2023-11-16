@@ -85,7 +85,6 @@ export class RegistroEspecialistaComponent {
         '',
         [
           Validators.required,
-          Validators.minLength(5)
         ]
       ],
       perfilImagen1: [
@@ -96,21 +95,6 @@ export class RegistroEspecialistaComponent {
         ]
       ]
     });
-
-    this.generarCaptcha();
-  }
-
-  generarCaptcha() {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let cadenaAleatoria = '';
-    const longitud = 5;
-  
-    for (let i = 0; i < longitud; i++) {
-      const caracterAleatorio = caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-      cadenaAleatoria += caracterAleatorio;
-    }
-  
-    this.captchaGenerado=cadenaAleatoria;
   }
 
   onFileChange(event: any) {
@@ -133,19 +117,6 @@ export class RegistroEspecialistaComponent {
     return null;
   }
 
-  captchaValidator(control: AbstractControl): { [key: string]: any } | null {
-    const captchaIngresado = control.value.toUpperCase();
-
-    if (captchaIngresado !== this.captchaGenerado) {
-      return { captchaNoCoincide: true };
-    }
-    return null;
-  }
-
-  captchaCorrecto(): boolean{
-      return this.form.value.captcha.toUpperCase() === this.captchaGenerado;
-  }
-
   displayImage(file: File, imageNumber: number) {
     if (file) {
       const reader = new FileReader();
@@ -159,42 +130,35 @@ export class RegistroEspecialistaComponent {
   }
 
   darAltaEspecialista() {
-    if (this.captchaCorrecto()){
-      this.spinner = true;
+    this.spinner = true;
 
-      const nuevoEspecialista: Especialista = {
-        nombre: this.form.value.nombre,
-        apellido: this.form.value.apellido,
-        edad: this.form.value.edad,
-        dni: this.form.value.dni,
-        especialidad: this.form.value.especialidad,
-        mail: this.form.value.mail,
-        habilitado: false,
-        disponibilidad: 30
-      };
+    const nuevoEspecialista: Especialista = {
+      nombre: this.form.value.nombre,
+      apellido: this.form.value.apellido,
+      edad: this.form.value.edad,
+      dni: this.form.value.dni,
+      especialidad: this.form.value.especialidad,
+      mail: this.form.value.mail,
+      habilitado: false,
+      disponibilidad: 30
+    };
 
-      const foto: any[] = this.perfilImagen1;
+    const foto: any[] = this.perfilImagen1;
 
-      this.especialistaService.addEspecialista(nuevoEspecialista, this.form.value.password, foto).then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: '¡Listo!',
-          text: 'El especialista se ha subido con éxito',
-        });
-  
-        this.authService.iniciarSesion(nuevoEspecialista.mail, this.form.value.password).then(() => {
-          this.router.navigate(['']);
-        });
-      }).catch(() => {
-        Swal.fire('¡Ups!', 'Ocurrió un error al dar de alta al especialista...', 'error');
-      }).finally(() => {
-        this.spinner = false;
+    this.especialistaService.addEspecialista(nuevoEspecialista, this.form.value.password, foto).then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Listo!',
+        text: 'El especialista se ha subido con éxito',
       });
-    }
-    else
-    {
-      this.generarCaptcha();
-      Swal.fire('¡Captcha inválido!', 'El captcha no es correcto...', 'warning');
-    }
+
+      this.authService.iniciarSesion(nuevoEspecialista.mail, this.form.value.password).then(() => {
+        this.router.navigate(['']);
+      });
+    }).catch(() => {
+      Swal.fire('¡Ups!', 'Ocurrió un error al dar de alta al especialista...', 'error');
+    }).finally(() => {
+      this.spinner = false;
+    });
   }
 }

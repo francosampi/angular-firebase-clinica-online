@@ -4,6 +4,7 @@ import { RegistroEspecialistaComponent } from './registro-especialista.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroEspecialistaRoutingModule } from './registro-especialista-routing-module';
 import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 
 
@@ -17,6 +18,7 @@ import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
     FormsModule,
     ReactiveFormsModule,
     SpinnerModule,
+    NgxCaptchaModule,
   ],
   exports: [
     RegistroEspecialistaComponent

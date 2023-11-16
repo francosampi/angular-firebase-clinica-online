@@ -4,7 +4,7 @@ import { RegistroPacienteComponent } from './registro-paciente.component';
 import { RegistroPacienteRoutingModule } from './registro-paciente-routing-module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
-import { CapitalizacionDirective } from 'src/app/directives/capitalizacion.directive';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 
 
@@ -17,6 +17,7 @@ import { CapitalizacionDirective } from 'src/app/directives/capitalizacion.direc
     RegistroPacienteRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxCaptchaModule,
     SpinnerModule
   ],
   exports: [

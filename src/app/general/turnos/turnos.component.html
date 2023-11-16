@@ -76,6 +76,7 @@
 
                     <!--SACAR TURNO-->
                     <div *ngIf="!turno">
+
                         <!--MOSTRAR ESPECIALIDADES-->
                         <div class="container mt-4">
                             <label>
@@ -90,15 +91,16 @@
                             </div>
                         </div>
 
-                        <!--MOSTRAR ESPECIALISTAS Y TURNOS-->
                         <div *ngIf="especialidadElegida" class="mt-5">
                             <div class="container d-flex row">
+
+                                <!--ELEGIR PROFESIONAL-->
                                 <div class="col-6">
                                     <div class="card">
                                         <div class="card-header">
                                             Nuestros profesionales especializados en <b>{{especialidadElegida}}</b>
                                         </div>
-                                        <div class="lista-scrolleable card-body">
+                                        <div class="lista-scrolleable card-body bg-light">
                                             <div *ngFor="let especialista of especialistas" class="card mt-3 p-2">
                                                 <p class="fw-bold">
                                                     {{especialista.nombre}} {{especialista.apellido}}
@@ -121,9 +123,9 @@
                                         <div class="card-header">
                                             Días disponibles para la consulta
                                         </div>
-                                        <div class="card-body lista-dias">
+                                        <div class="lista-dias card-body bg-light">
                                             <button *ngFor="let dia of horariosDisponiblesInfo"
-                                                class="boton-dia btn btn-light m-1" (click)="elegirFecha(dia)">
+                                                class="boton-dia btn btn-info m-1" (click)="elegirFecha(dia)">
                                                 {{dia.diaMes}}
                                             </button>
                                         </div>
@@ -136,9 +138,9 @@
                                         <div class="card-header">
                                             Horarios disponibles para la consulta del día <b>{{fechaElegida.diaMes}}</b>
                                         </div>
-                                        <div class="card-body">
+                                        <div class="card-body bg-light">
                                             <button *ngFor="let hora of fechaElegida.horario"
-                                                class="boton-hora btn btn-light m-1" (click)="elegirHora(hora)">
+                                                class="boton-hora btn btn-info m-1" (click)="elegirHora(hora)">
                                                 {{ hora | date:'HH:mm a' }}
                                             </button>
                                         </div>
@@ -149,8 +151,7 @@
                                 <div *ngIf="horaElegida" class="col mt-3">
                                     <div class="card">
                                         <div class="card-header">
-                                            Turno para el día <b>{{fechaElegida.diaMes}} a las {{horaElegida |
-                                                date:'HH:mm a'}}</b> con
+                                            Turno para el día <b>{{fechaElegida.diaMes}} a las {{horaElegida | date:'HH:mm a'}}</b> con
                                             <b>{{especialistaElegido?.nombre}} {{especialistaElegido?.apellido}}</b>
                                         </div>
                                         <div class="mt-2">

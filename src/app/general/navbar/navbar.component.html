@@ -28,7 +28,7 @@
 
 <header *ngIf="sidebarAbierta">
   <nav id="sidebarMenu" class="collapse d-lg-block sidebar bg-white">
-    
+
     <button class="boton-sidebar btn btn-primary shadow-sm fw-bold" (click)="sidebarAbierta=false">X</button>
 
     <div class="position-sticky">
@@ -38,13 +38,13 @@
           <span class="mx-2">Inicio</span>
         </a>
 
-        <a *ngIf="usuarioCredenciales?.perfil" routerLink="/perfil" class="list-group-item list-group-item-action py-2 ripple">
+        <a *ngIf="usuarioCredenciales?.perfil" routerLink="/perfil"
+          class="list-group-item list-group-item-action py-2 ripple">
           <img src="../../../assets/iconos/icono-navbar-usuario.png" style="width: 25px;">
           <span class="mx-2">Perfil</span>
         </a>
 
-        <a *ngIf="usuarioLogeado" routerLink="/turnos"
-          class="list-group-item list-group-item-action py-2 ripple">
+        <a *ngIf="usuarioLogeado" routerLink="/turnos" class="list-group-item list-group-item-action py-2 ripple">
           <img src="../../../assets/iconos/icono-navbar-turnos.png" style="width: 25px;">
           <span class="mx-2">Turnos</span>
         </a>
@@ -55,7 +55,8 @@
           <span class="mx-2">Usuarios</span>
         </a>
 
-        <a *ngIf="usuarioCredenciales?.perfil" (click)="salir()" class="list-group-item list-group-item-action py-2 ripple bg-danger">
+        <a *ngIf="usuarioCredenciales?.perfil" (click)="salir()"
+          class="list-group-item list-group-item-action py-2 ripple bg-danger">
           <span class="mx-2 text-white">Cerrar sesión</span>
         </a>
       </div>

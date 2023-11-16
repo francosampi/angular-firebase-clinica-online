@@ -47,16 +47,16 @@
                 <div class="row mt-3">
                   <label for="especialidad">Especialidad</label>
                   <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" id="especialidad1" formControlName="especialidad" value="dermatologia" autocomplete="off">
+                    <input type="radio" class="btn-check" id="especialidad1" formControlName="especialidad" value="dermatología" autocomplete="off">
                     <label class="btn btn-outline-primary" for="especialidad1">Dermatología</label>
 
-                    <input type="radio" class="btn-check" id="especialidad2" formControlName="especialidad" value="psiquiatria" autocomplete="off">
+                    <input type="radio" class="btn-check" id="especialidad2" formControlName="especialidad" value="psiquiatría" autocomplete="off">
                     <label class="btn btn-outline-primary" for="especialidad2">Psiquiatría</label>
 
-                    <input type="radio" class="btn-check" id="especialidad3" formControlName="especialidad" value="cardiologia" autocomplete="off">
+                    <input type="radio" class="btn-check" id="especialidad3" formControlName="especialidad" value="cardiología" autocomplete="off">
                     <label class="btn btn-outline-primary" for="especialidad3">Cardiología</label>
 
-                    <input type="radio" class="btn-check" id="especialidad4" formControlName="especialidad" value="pediatria" autocomplete="off">
+                    <input type="radio" class="btn-check" id="especialidad4" formControlName="especialidad" value="pediatría" autocomplete="off">
                     <label class="btn btn-outline-primary" for="especialidad4">Pediatría</label>
                   </div>
                 </div>
@@ -67,18 +67,12 @@
                     <input type="password" class="form-control" id="password" name="password" formControlName="password"
                       placeholder="Contraseña" [ngClass]="{'is-invalid': form.get('password')?.invalid}">
                   </div>
-                  <div class="col">
-                    <label for="password">Captcha</label>
-                    <input type="text" class="form-control" id="captcha" name="captcha" formControlName="captcha"
-                      appCapitalizacion placeholder="Captcha" maxlength="5"
-                      [ngClass]="{'is-invalid': form.get('captcha')?.invalid}">
-                  </div>
-                  <div class="col d-flex align-items-end">
-                    <input type="text" class="form-control" id="captchaGenerado" name="captchaGenerado"
-                      [value]="captchaGenerado" readonly onfocus="this.blur()" style="font-weight: bold;">
-                    <button type="button" class="btn btn-warning" (click)="generarCaptcha()">
-                      <img src="../../../assets/iconos/icono-reset.png" width="20px">
-                    </button>
+
+                  <div class="col p-3">
+                    <ngx-recaptcha2 #captchaElem
+                      siteKey="6LfTJxIpAAAAAL8C1q8xybzTKezJWn6NxYjaataZ"
+                      formControlName="captcha">
+                    </ngx-recaptcha2>
                   </div>
                 </div>
 

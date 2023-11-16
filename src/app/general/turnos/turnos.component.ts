@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Especialidad } from 'src/app/interfaces/especialidad';
 import { Especialista } from 'src/app/interfaces/perfiles';
