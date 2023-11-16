@@ -6,9 +6,17 @@ export interface Turno{
     estado: string;
     fecha: string;
     motivo?: string;
-    diagnostico?: string;
-    resenia?: {
-        comentario: string;
-        satisfecho: boolean;
-    }
+    diagnostico?: Diagnostico;
+    resenia?: Resenia;
+}
+
+export interface Diagnostico{
+    observacion?: string;
+    tratamiento?: string;
+    fecha?: string;
+}
+
+export interface Resenia{
+    comentario?: string;
+    fecha?: string;
 }

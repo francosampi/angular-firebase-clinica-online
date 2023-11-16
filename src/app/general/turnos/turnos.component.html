@@ -53,7 +53,8 @@
                             <div class="card-body">
                                 <h4 class="card-title my-4">{{fechaElegida.diaMes}} a las {{turno.fecha}}</h4>
                                 <p class="card-text">
-                                    Profesional: <b>{{especialistaElegido?.nombre}} {{especialistaElegido?.apellido}}</b>
+                                    Profesional: <b>{{especialistaElegido?.nombre}}
+                                        {{especialistaElegido?.apellido}}</b>
                                 </p>
                                 <p class="card-text mt-2">
                                     Especialidad: <b>{{especialistaElegido!.especialidad | capizalizar}}</b>
@@ -62,17 +63,23 @@
                                     Mail: <b>{{especialistaElegido?.mail}}</b>
                                 </p>
                             </div>
-                            <button class="btn btn-success w-100 mt-4" (click)="confirmarTurno(turno)">
-                                Confirmar turno
-                            </button>
+                            <div class="w-100 mt-4">
+                                <button class="btn btn-success w-50" (click)="confirmarTurno(turno)">
+                                    Confirmar turno
+                                </button>
+                                <button class="btn btn-secondary w-50" (click)="limpiarGestionTurnos()">
+                                    Cancelar
+                                </button>
+                            </div>
                         </div>
                     </div>
 
+                    <!--SACAR TURNO-->
                     <div *ngIf="!turno">
                         <!--MOSTRAR ESPECIALIDADES-->
                         <div class="container mt-4">
                             <label>
-                                <h5 class="text-center">Selecciona una especialidad</h5>
+                                <h5 class="text-center">{{tituloProgreso}}</h5>
                             </label>
                             <div class="d-flex mt-3">
                                 <button *ngFor="let especialidad of especialidades" [value]="especialidad.nombre"
@@ -114,9 +121,9 @@
                                         <div class="card-header">
                                             Días disponibles para la consulta
                                         </div>
-                                        <div class="card-body">
+                                        <div class="card-body lista-dias">
                                             <button *ngFor="let dia of horariosDisponiblesInfo"
-                                                class="btn btn-light m-1" (click)="elegirFecha(dia)">
+                                                class="boton-dia btn btn-light m-1" (click)="elegirFecha(dia)">
                                                 {{dia.diaMes}}
                                             </button>
                                         </div>
@@ -142,7 +149,9 @@
                                 <div *ngIf="horaElegida" class="col mt-3">
                                     <div class="card">
                                         <div class="card-header">
-                                            Turno para: <b>{{fechaElegida.diaMes}} a las {{horaElegida | date:'HH:mm a'}}</b>
+                                            Turno para el día <b>{{fechaElegida.diaMes}} a las {{horaElegida |
+                                                date:'HH:mm a'}}</b> con
+                                            <b>{{especialistaElegido?.nombre}} {{especialistaElegido?.apellido}}</b>
                                         </div>
                                         <div class="mt-2">
                                             <button class="btn btn-warning w-100" (click)="crearTurno(horaElegida)">
@@ -168,8 +177,7 @@
                 </div>
                 <div class="card-body">
                     <div *ngFor="let turno of turnos" class="card my-2">
-                        <div class="card-header d-flex justify-content-between align-items-center p-3"
-                        [ngClass]="{
+                        <div class="card-header d-flex justify-content-between align-items-center p-3" [ngClass]="{
                             'border-danger': turno.estado==='Rechazado',
                             'border-secondary': turno.estado==='Cancelado',
                             'border-info': turno.estado==='Inactivo',
@@ -178,40 +186,57 @@
                         }">
                             <div [ngClass]="{'text-danger': turno.estado==='Rechazado',
                                             'text-secondary': turno.estado==='Cancelado'}">
-                                <b>{{turno.estado}}</b> - {{turno.especialidad | capizalizar}} - ({{turno.fecha}}) 
+                                <b>{{turno.estado}}</b> - {{turno.especialidad | capizalizar}} - ({{turno.fecha}})
                             </div>
                             <div *ngIf="turno.estado==='Aceptado' || turno.estado==='Inactivo'">
 
                                 <!--BOTONES ESPECIALISTA-->
                                 <div *ngIf="usuarioPerfil==='especialista'">
-                                    <button *ngIf="turno.estado!=='Aceptado'"
-                                    class="btn btn-primary m-1" (click)="aceptarTurno(turno)">
+                                    <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-primary m-1"
+                                        (click)="aceptarTurno(turno)">
                                         Aceptar turno
                                     </button>
 
-                                    <button *ngIf="turno.estado==='Aceptado'"
-                                    class="btn btn-success m-1" (click)="finalizarTurno(turno)">
+                                    <button *ngIf="turno.estado==='Aceptado'" class="btn btn-success m-1"
+                                        (click)="finalizarTurno(turno)">
                                         Finalizar turno
                                     </button>
 
-                                    <button *ngIf="turno.estado!=='Aceptado'"
-                                    class="btn btn-danger m-1" (click)="rechazarTurno(turno)">
+                                    <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-danger m-1"
+                                        (click)="rechazarTurno(turno)">
                                         Rechazar turno
                                     </button>
                                 </div>
-                                
-                                <button *ngIf="turno.estado==='Inactivo'" class="btn btn-secondary m-1" (click)="cancelarTurno(turno)">
+
+                                <button *ngIf="turno.estado==='Inactivo'" class="btn btn-secondary m-1"
+                                    (click)="cancelarTurno(turno)">
                                     Cancelar turno
-                                </button>    
+                                </button>
                             </div>
 
-                            <button *ngIf="turno.estado==='Finalizado'" class="btn btn-warning m-1" (click)="verDiagnostico(turno)">
-                                Ver diagnóstico
-                            </button>
+                            <!--TURNO FINALIZADO-->
+                            <div *ngIf="turno.estado==='Finalizado'">
 
+                                <button *ngIf="usuarioPerfil=='especialista'" class="btn btn-warning m-1"
+                                    (click)="verDiagnostico(turno)"
+                                    [disabled]="turno.diagnostico?.observacion===undefined">
+                                    Ver diagnóstico
+                                </button>
+
+                                <!--BOTON PACIENTE-->
+                                <button *ngIf="usuarioPerfil=='paciente' && turno.resenia?.comentario===undefined"
+                                    class="btn btn-primary m-1" (click)="subirResenia(turno)">
+                                    Subir reseña
+                                </button>
+
+                                <button *ngIf="turno.resenia?.comentario!==undefined" class="btn btn-warning m-1"
+                                    (click)="verResenia(turno)">
+                                    Ver reseña
+                                </button>
+                            </div>
                             <span *ngIf="turno.motivo">
                                 <b>Motivo: </b><i class="text-secondary">{{turno.motivo}}</i>
-                             </span>
+                            </span>
                         </div>
                     </div>
                 </div>

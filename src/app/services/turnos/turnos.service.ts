@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Turno } from 'src/app/interfaces/turno';
+import { Diagnostico, Resenia, Turno } from 'src/app/interfaces/turno';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +27,19 @@ export class TurnosService {
     ).snapshotChanges();
   }
 
-  updateTurnoById(id: string, estado: string, motivoTxt: string, diagnosticoTxt: string='', reseniaObj: any={}): Promise<void> {
+  updateTurnoById(id: string, estado: string, motivoTxt: string, diagnosticoTxt: Diagnostico = {}): Promise<void> {
     return new Promise((res, rej) => {
-      this.firestore.collection('turnos').doc(id).update({ estado: estado, motivo: motivoTxt, diagnostico: diagnosticoTxt, resenia: reseniaObj }).then(() => {
+      this.firestore.collection('turnos').doc(id).update({ estado: estado, motivo: motivoTxt, diagnostico: diagnosticoTxt }).then(() => {
+        res();
+      }).catch(error => {
+        rej(error);
+      });
+    });
+  }
+
+  addReseniaTurnoById(id: string, reseniaObj: Resenia = {}): Promise<void> {
+    return new Promise((res, rej) => {
+      this.firestore.collection('turnos').doc(id).update({ resenia: reseniaObj }).then(() => {
         res();
       }).catch(error => {
         rej(error);

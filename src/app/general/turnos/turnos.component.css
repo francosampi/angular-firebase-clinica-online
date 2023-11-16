@@ -1,5 +1,9 @@
 .lista-scrolleable {
-    height: 50vh;
+    height: 40vh;
     overflow: auto;
-    background-color: gray;
+}
+
+.lista-dias{
+    height: 40vh;
+    overflow: auto;
 }

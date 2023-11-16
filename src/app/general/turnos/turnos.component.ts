@@ -2,7 +2,7 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Especialidad } from 'src/app/interfaces/especialidad';
 import { Especialista } from 'src/app/interfaces/perfiles';
-import { Turno } from 'src/app/interfaces/turno';
+import { Diagnostico, Resenia, Turno } from 'src/app/interfaces/turno';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EspecialidadesService } from 'src/app/services/especialidades/especialidades.service';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
@@ -32,6 +32,7 @@ export class TurnosComponent implements OnInit {
   fechasDisponibles: any;
   fechaElegida: any;
   horaElegida: any;
+  tituloProgreso = '';
   porcentajeProgreso = 0;
   spinner: boolean = false;
 
@@ -77,6 +78,8 @@ export class TurnosComponent implements OnInit {
         this.especialidades = listaEspecialidades;
       }
     });
+
+    this.tituloProgreso = '1- Selecciona una especialidad';
   }
 
   filtrarEspecialidad() {
@@ -85,6 +88,8 @@ export class TurnosComponent implements OnInit {
     this.especialistas$.subscribe((lista: Especialista[]) => {
       if (lista) {
         this.especialistas = lista.filter(especialista => especialista.especialidad === this.especialidadElegida && especialista.habilitado === true);
+
+        this.tituloProgreso = '2- Selecciona un profesional';
         this.porcentajeProgreso = 20;
         this.spinner = false;
       }
@@ -101,6 +106,7 @@ export class TurnosComponent implements OnInit {
       }
     });
 
+    this.tituloProgreso = '3- Selecciona una fecha disponible';
     this.porcentajeProgreso = 40;
   }
 
@@ -118,11 +124,13 @@ export class TurnosComponent implements OnInit {
 
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
+    this.tituloProgreso = '4- Selecciona un horario disponible';
     this.porcentajeProgreso = 60;
   }
 
   elegirHora(hora: any) {
     this.horaElegida = hora;
+    this.tituloProgreso = '5- Corrobora la información antes de continuar';
     this.porcentajeProgreso = 80;
   }
 
@@ -152,7 +160,6 @@ export class TurnosComponent implements OnInit {
       this.turno = turnoASubir;
       this.limpiarGestionTurnos();
       this.tramite = 'gestionar-turno';
-      this.porcentajeProgreso = 100;
 
       Swal.fire('¡Listo!', 'El turno fue solicitado correctamente.', 'success');
     }).catch(() => {
@@ -177,33 +184,73 @@ export class TurnosComponent implements OnInit {
   }
 
   finalizarTurno(turno: Turno) {
+    let observacion = '';
+    let tratamiento = '';
+
     Swal.fire({
-      title: 'Finalizar turno del paciente',
-      html: 'Detalle el diagnostico abajo:',
+      title: 'Finalizar turno del paciente (1/2)',
+      html: 'Detalle el <b>observamiento</b> abajo:',
       input: 'textarea',
       inputAttributes: {
         autocapitalize: 'off',
       },
       showCancelButton: true,
-      confirmButtonText: 'Confirmar',
+      confirmButtonText: 'Continuar',
       cancelButtonText: 'Atrás',
       confirmButtonColor: 'green',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.spinner = true;
+    }).then((obsResult) => {
 
-        const diagnostico = result.value;
+      if (obsResult.isConfirmed) {
 
-        if (turno.id) {
-          this.turnosService.updateTurnoById(turno.id, 'Finalizado', '', diagnostico).then(() => {
-            Swal.fire('¡Listo!', 'El turno ha sido finalizado.', 'success');
-          }).catch(() => {
-            Swal.fire('¡Ups!', 'Ocurrió un error al finalizar el turno.', 'error');
-          }).finally(() => {
-            this.spinner = false;
-          });
-        }
-      }
+        observacion = obsResult.value;
+
+        Swal.fire({
+          title: 'Finalizar turno del paciente (2/2)',
+          html: 'Detalle el <b>tratamiento</b> abajo:',
+          input: 'textarea',
+          inputAttributes: {
+            autocapitalize: 'off',
+          },
+          showCancelButton: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Atrás',
+          confirmButtonColor: 'green',
+        }).then((tratResult) => {
+
+          if (tratResult.isConfirmed) {
+
+            this.spinner = true;
+            tratamiento = tratResult.value;
+
+            const diagnostico: Diagnostico = {
+              observacion: observacion,
+              tratamiento: tratamiento,
+              fecha: this.formatearFecha(new Date())
+            };
+
+            if (turno.id) {
+              this.turnosService.updateTurnoById(turno.id, 'Finalizado', '', diagnostico).then(() => {
+
+                Swal.fire('¡Listo!', 'El turno ha sido finalizado.', 'success');
+              }).catch(() => {
+                Swal.fire('¡Ups!', 'Ocurrió un error al finalizar el turno.', 'error');
+              }).finally(() => {
+                this.spinner = false;
+              });
+            };
+          }
+        });
+      };
+    });
+  }
+
+  verDiagnostico(turno: Turno) {
+    Swal.fire({
+      title: "Consulta del profesional (consulta del " + turno.fecha + ")",
+      html: '<div class="text-left">' +
+        '<b>Diagnóstico: </b>' + turno.diagnostico?.observacion + '<br><br>' +
+        '<b>Tratamiento: </b>' + turno.diagnostico?.tratamiento + '<br><br>' +
+        '<b>Fecha del diagnóstico: </b>' + turno.diagnostico?.fecha + '</div>',
     });
   }
 
@@ -271,10 +318,52 @@ export class TurnosComponent implements OnInit {
     });
   }
 
-  verDiagnostico(turno: Turno){
+  subirResenia(turno: Turno) {
+    let comentario = '';
+
     Swal.fire({
-      title: "Consulta del "+turno.fecha,
-      text: turno.diagnostico,
+      title: 'Reseña sobre la consulta del ' + turno.fecha,
+      html: 'Detalle su <b>reseña</b> abajo:',
+      input: 'textarea',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Atrás',
+      confirmButtonColor: 'green',
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        this.spinner = true;
+
+        comentario = result.value
+
+        const resenia: Resenia = {
+          comentario: comentario,
+          fecha: this.formatearFecha(new Date())
+        };
+
+        if (turno.id) {
+          this.turnosService.addReseniaTurnoById(turno.id, resenia).then(() => {
+            Swal.fire('¡Listo!', 'La reseña ha sido subida.', 'success');
+          }).catch(() => {
+            Swal.fire('¡Ups!', 'Ocurrió un error al subir la reseña', 'error');
+          }).finally(() => {
+            this.spinner = false;
+          });
+        };
+      };
+    });
+  }
+
+  verResenia(turno: Turno) {
+    Swal.fire({
+      title: 'Reseña del paciente (consulta del ' + turno.fecha + ')',
+      html: '<div class="text-left">' +
+        '<b>Reseña: </b>' + turno.resenia?.comentario + '<br><br>' +
+        '<b>Fecha de la reseña: </b>' + turno.resenia?.fecha + '</div>',
     });
   }
 
@@ -332,5 +421,8 @@ export class TurnosComponent implements OnInit {
     this.fechaElegida = undefined;
     this.horaElegida = undefined;
     this.especialistaElegido = undefined;
+    this.especialidadElegida = '';
+    this.tituloProgreso = '1- Selecciona un profesional';
+    this.porcentajeProgreso = 0;
   }
 }
