@@ -18,6 +18,7 @@ export class AuthService {
     this.getCurrentUser().subscribe((user) => {
       if (user) {
         this.usuarioLogeado = user;
+
         this.userService.getUserByUid(user.uid).subscribe((cred) => {
 
           if (cred) {

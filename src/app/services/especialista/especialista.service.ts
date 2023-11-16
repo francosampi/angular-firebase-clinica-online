@@ -24,7 +24,7 @@ export class EspecialistaService {
         ...nuevoEspecialista,
         perfil: 'especialista'
       }).then(() => {
-        return data.user?.sendEmailVerification().then(()=>{
+        return data.user?.sendEmailVerification().then(() => {
           return Promise.resolve();
         });
       }).catch((error) => {
@@ -33,15 +33,15 @@ export class EspecialistaService {
     });
   }
 
-  getEspecialistas(){
+  getEspecialistas() {
     return this.firestore.collection('usuarios', ref => ref.where('perfil', '==', 'especialista')).valueChanges();
   }
 
-  getEspecialistaById(id: string){
-    return this.firestore.collection('usuarios').doc(id).valueChanges({idField: 'id'});
+  getEspecialistaById(id: string) {
+    return this.firestore.collection('usuarios').doc(id).valueChanges({ idField: 'id' });
   }
 
-  updateEspecialistaDisponibilidadHoraria(id: string, mins: number): Promise<void>{
+  updateEspecialistaDisponibilidadHoraria(id: string, mins: number): Promise<void> {
     return new Promise((res, rej) => {
       this.firestore.collection('usuarios').doc(id).update({ disponibilidad: mins }).then(() => {
         res();

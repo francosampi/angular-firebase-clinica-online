@@ -1,7 +1,7 @@
 .foto-perfil{
-    width: 200px;
-    height: 200px;
-    border-radius: 100%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
     object-fit: cover;
     object-position: center;
 }

@@ -25,7 +25,6 @@ export class PerfilComponent implements OnInit {
     this.authService.getCurrentUser().pipe(untilDestroyed(this)).subscribe((user) => {
 
       this.usuarioId = user.uid;
-      console.log(this.usuarioId);
 
       this.userService.getUserByUid(user!.uid).pipe(untilDestroyed(this)).subscribe((user) => {
         this.usuarioDatos = user;

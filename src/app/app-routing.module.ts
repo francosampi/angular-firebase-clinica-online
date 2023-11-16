@@ -13,7 +13,7 @@ const routes: Routes = [
 
   //ACCESOS LIMITADOS
   { path: "usuarios", loadChildren: () => import('./general/usuarios/usuarios.module').then(m => m.UsuariosModule), canActivate: [adminGuard]},
-  { path: "turnos", loadChildren: () => import('./general/turnos/turnos.module').then(m => m.TurnosModule), canActivate: [turnosGuard]},
+  { path: "turnos", loadChildren: () => import('./general/turnos/turnos.module').then(m => m.TurnosModule)},
 ];
 
 @NgModule({

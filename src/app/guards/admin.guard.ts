@@ -16,6 +16,7 @@ export const adminGuard: CanActivateFn = async (route, state) => {
   else
   {
     router.navigateByUrl('');
+    
     Swal.fire('Acceso denegado', 'Usted debe ser administrador para ingresar.<br>Su perfil es: '+perfilUsuario, 'warning');
     return false;
   }

@@ -1,9 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable, map, take } from 'rxjs';
-import { Especialista } from 'src/app/interfaces/perfiles';
-import { AuthService } from '../auth/auth.service';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +16,10 @@ export class UserService implements OnInit {
 
   getAllUsers(): Observable<any> {
     return this.firestore.collection('usuarios').valueChanges();
+  }
+
+  getAllUsersWithId(): Observable<any> {
+    return this.firestore.collection('usuarios').snapshotChanges();
   }
 
   getAllEspecialistas(): Observable<any> {

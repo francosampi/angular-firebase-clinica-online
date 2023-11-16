@@ -2,11 +2,11 @@
   <div class="nav-item navbar-item ms-auto">
     <div *ngIf="usuarioLogeado" class="d-flex row justify-content-center align-items-center">
       <div class="d-flex row">
-        <div class="col">
+        <div class="col d-flex justify-content-end">
           <img *ngIf="usuarioFoto" [src]="usuarioFoto" class="navbar-imagen-perfil-contenedor shadow-sm">
         </div>
         <div class="col">
-          <p class="fw-bold text-secondary">
+          <p class="fw-bold text-secondary text-center">
             {{usuarioCredenciales?.nombre}} {{usuarioCredenciales?.apellido}}
           </p>
         </div>
@@ -21,15 +21,15 @@
   </div>
 </div>
 
-<button *ngIf="!sidebarAbierta" id="toggleSidebar" class="boton-sidebar btn btn-primary shadow-sm"
+<button *ngIf="!sidebarAbierta" id="toggleSidebar" class="boton-sidebar btn btn-primary shadow-sm fw-bold"
   (click)="sidebarAbierta=!sidebarAbierta">
   >
 </button>
 
 <header *ngIf="sidebarAbierta">
-  <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+  <nav id="sidebarMenu" class="collapse d-lg-block sidebar bg-white">
     
-    <button class="boton-sidebar btn btn-primary shadow-sm" (click)="sidebarAbierta=false">X</button>
+    <button class="boton-sidebar btn btn-primary shadow-sm fw-bold" (click)="sidebarAbierta=false">X</button>
 
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4">
@@ -39,21 +39,24 @@
         </a>
 
         <a *ngIf="usuarioCredenciales?.perfil" routerLink="/perfil" class="list-group-item list-group-item-action py-2 ripple">
+          <img src="../../../assets/iconos/icono-navbar-usuario.png" style="width: 25px;">
           <span class="mx-2">Perfil</span>
         </a>
 
-        <a *ngIf="usuarioCredenciales?.perfil!=='especialista'" routerLink="/turnos"
+        <a *ngIf="usuarioLogeado" routerLink="/turnos"
           class="list-group-item list-group-item-action py-2 ripple">
+          <img src="../../../assets/iconos/icono-navbar-turnos.png" style="width: 25px;">
           <span class="mx-2">Turnos</span>
         </a>
 
         <a *ngIf="usuarioCredenciales?.perfil=='administrador'" routerLink="/usuarios"
           class="list-group-item list-group-item-action py-2 ripple">
+          <img src="../../../assets/iconos/icono-navbar-usuarios.png" style="width: 25px;">
           <span class="mx-2">Usuarios</span>
         </a>
 
         <a *ngIf="usuarioCredenciales?.perfil" (click)="salir()" class="list-group-item list-group-item-action py-2 ripple bg-danger">
-          <span class="mx-2">Cerrar sesión</span>
+          <span class="mx-2 text-white">Cerrar sesión</span>
         </a>
       </div>
     </div>

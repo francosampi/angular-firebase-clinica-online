@@ -4,7 +4,6 @@ import { RegistroEspecialistaComponent } from './registro-especialista.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroEspecialistaRoutingModule } from './registro-especialista-routing-module';
 import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
-import { CapitalizacionDirective } from 'src/app/directives/capitalizacion.directive';
 
 
 

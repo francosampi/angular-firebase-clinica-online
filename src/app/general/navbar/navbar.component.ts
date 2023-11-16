@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import Swal from 'sweetalert2';
 
+@UntilDestroy()
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -22,14 +24,15 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe((user) => {
-      this.usuarioLogeado = user;
-
       if (user) {
-        this.userService.getUserByUid(user?.uid).subscribe((cred) => {
+        this.usuarioLogeado = user;
+
+        this.userService.getUserByUid(user.uid).subscribe((cred) => {
+
           if (cred) {
             this.usuarioCredenciales = cred;
 
-            this.authService.getUserImagebyUID(user?.uid).subscribe((foto) => {
+            this.authService.getUserImagebyUID(user.uid).subscribe((foto) => {
               if (foto) {
                 this.usuarioFoto = foto;
               }

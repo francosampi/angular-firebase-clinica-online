@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Especialidad } from 'src/app/interfaces/especialidad';
 import { Especialista } from 'src/app/interfaces/perfiles';
@@ -17,8 +17,10 @@ import Swal from 'sweetalert2';
 export class TurnosComponent implements OnInit {
 
   usuarioId: string = '';
+  usuarioPerfil: string | undefined = '';
   tramite: string = '';
   turno: Turno | undefined;
+  turnos: any[] = [];
   especialistaId: string = '';
   especialistas$: Observable<any>;
   especialistas: Especialista[] = [];
@@ -33,18 +35,47 @@ export class TurnosComponent implements OnInit {
   porcentajeProgreso = 0;
   spinner: boolean = false;
 
-  constructor(private authService: AuthService, private userService: UserService, private especialidadesService: EspecialidadesService, private turnosService: TurnosService) {
+  constructor(private authService: AuthService, private userService: UserService,
+    private especialidadesService: EspecialidadesService, private turnosService: TurnosService) {
     this.especialistas$ = this.userService.getAllEspecialistas();
   }
 
   ngOnInit(): void {
-
     this.authService.getCurrentUser().subscribe((user) => {
-      this.usuarioId = user.uid;
+      if (user) {
+        this.usuarioId = user.uid;
+
+        this.userService.getUserByUid(user.uid).subscribe((cred) => {
+          this.usuarioPerfil = cred.perfil;
+
+          if (this.usuarioPerfil === 'especialista') {
+            this.turnosService.getTurnosByEspecialistaId(this.usuarioId).subscribe((listaTurnos) => {
+              this.turnos = listaTurnos.map(turno => {
+                const id = turno.payload.doc.id;
+                const datos: any = turno.payload.doc.data();
+
+                return { id, ...datos } as Turno;
+              });
+            });
+          }
+          else {
+            this.turnosService.getTurnosByUsuarioId(this.usuarioId).subscribe((listaTurnos) => {
+              this.turnos = listaTurnos.map(turno => {
+                const id = turno.payload.doc.id;
+                const datos: any = turno.payload.doc.data();
+
+                return { id, ...datos } as Turno;
+              });
+            });
+          }
+        });
+      }
     });
 
-    this.especialidadesService.getAllEspecialidades().subscribe((lista) => {
-      this.especialidades = lista;
+    this.especialidadesService.getAllEspecialidades().subscribe((listaEspecialidades) => {
+      if (listaEspecialidades) {
+        this.especialidades = listaEspecialidades;
+      }
     });
   }
 
@@ -52,9 +83,11 @@ export class TurnosComponent implements OnInit {
     this.spinner = true;
 
     this.especialistas$.subscribe((lista: Especialista[]) => {
-      this.especialistas = lista.filter(especialista => especialista.especialidad === this.especialidadElegida && especialista.habilitado===true);
-      this.porcentajeProgreso = 20;
-      this.spinner = false;
+      if (lista) {
+        this.especialistas = lista.filter(especialista => especialista.especialidad === this.especialidadElegida && especialista.habilitado === true);
+        this.porcentajeProgreso = 20;
+        this.spinner = false;
+      }
     });
   }
 
@@ -72,7 +105,6 @@ export class TurnosComponent implements OnInit {
   }
 
   consultarHorariosDisponiblesEspecialista(especialista: Especialista) {
-
     const disponibilidad: number = especialista?.disponibilidad;
 
     if (especialista?.disponibilidad) {
@@ -82,7 +114,9 @@ export class TurnosComponent implements OnInit {
 
   elegirFecha(fecha: any) {
     this.fechaElegida = fecha;
-    this.horaElegida = '';
+    this.horaElegida = undefined;
+
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
     this.porcentajeProgreso = 60;
   }
@@ -96,26 +130,151 @@ export class TurnosComponent implements OnInit {
     return diaDeLaSemana === 0 || diaDeLaSemana === 6;
   }
 
-  confirmarTurno(fecha: any) {
-    this.spinner = true;
-
+  crearTurno(fecha: any) {
     let fechaFormateada = this.formatearFecha(fecha);
 
-    const turno: Turno = {
+    const turnoNuevo: Turno = {
       idPaciente: this.usuarioId,
       idEspecialista: this.especialistaId,
       especialidad: this.especialidadElegida,
       estado: 'Inactivo',
-      motivo: '',
       fecha: fechaFormateada
     }
 
-    this.turnosService.addTurno(turno).then(() => {
+    this.turno = turnoNuevo;
+    this.porcentajeProgreso = 100;
+  }
+
+  confirmarTurno(turnoASubir: Turno) {
+    this.spinner = true;
+
+    this.turnosService.addTurno(turnoASubir).then(() => {
+      this.turno = turnoASubir;
+      this.limpiarGestionTurnos();
+      this.tramite = 'gestionar-turno';
+      this.porcentajeProgreso = 100;
+
       Swal.fire('¡Listo!', 'El turno fue solicitado correctamente.', 'success');
     }).catch(() => {
       Swal.fire('¡Ups!', 'Ocurrió un error solicitando el turno', 'error');
     }).finally(() => {
       this.spinner = false;
+    });
+  }
+
+  aceptarTurno(turno: Turno) {
+    this.spinner = true;
+
+    if (turno.id) {
+      this.turnosService.updateTurnoById(turno.id, 'Aceptado', '').then(() => {
+        Swal.fire('¡Listo!', 'El turno ha sido aceptado.', 'success');
+      }).catch(() => {
+        Swal.fire('¡Ups!', 'Ocurrió un error al aceptar el turno.', 'error');
+      }).finally(() => {
+        this.spinner = false;
+      });
+    }
+  }
+
+  finalizarTurno(turno: Turno) {
+    Swal.fire({
+      title: 'Finalizar turno del paciente',
+      html: 'Detalle el diagnostico abajo:',
+      input: 'textarea',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Atrás',
+      confirmButtonColor: 'green',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.spinner = true;
+
+        const diagnostico = result.value;
+
+        if (turno.id) {
+          this.turnosService.updateTurnoById(turno.id, 'Finalizado', '', diagnostico).then(() => {
+            Swal.fire('¡Listo!', 'El turno ha sido finalizado.', 'success');
+          }).catch(() => {
+            Swal.fire('¡Ups!', 'Ocurrió un error al finalizar el turno.', 'error');
+          }).finally(() => {
+            this.spinner = false;
+          });
+        }
+      }
+    });
+  }
+
+  rechazarTurno(turno: Turno) {
+    Swal.fire({
+      title: '<b>¡Cuidado!</b> esta acción es irreversible',
+      html: 'Escriba el motivo del rechazo',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Atrás',
+      confirmButtonColor: 'red',
+      icon: 'warning'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.spinner = true;
+
+        const motivo = result.value;
+
+        if (turno.id) {
+          this.turnosService.updateTurnoById(turno.id, 'Rechazado', motivo).then(() => {
+            Swal.fire('¡Listo!', 'El turno ha sido rechazado.<br>Motivo: <b>' + motivo + '</b>', 'success');
+          }).catch(() => {
+            Swal.fire('¡Ups!', 'Ocurrió un error al rechazar el turno.', 'error');
+          }).finally(() => {
+            this.spinner = false;
+          });
+        }
+      }
+    });
+  }
+
+  cancelarTurno(turno: Turno) {
+    Swal.fire({
+      title: '<b>¡Cuidado!</b> esta acción es irreversible',
+      html: 'Escriba el motivo de la cancelación',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Atrás',
+      confirmButtonColor: 'red',
+      icon: 'warning'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.spinner = true;
+
+        const motivo = result.value;
+
+        if (turno.id) {
+          this.turnosService.cancelTurnoById(turno.id, motivo).then(() => {
+            Swal.fire('¡Listo!', 'El turno ha sido cancelado.<br>Motivo: <b>' + motivo + '</b>', 'success');
+          }).catch(() => {
+            Swal.fire('¡Ups!', 'Ocurrió un error al cancelar el turno.', 'error');
+          }).finally(() => {
+            this.spinner = false;
+          });
+        }
+      }
+    });
+  }
+
+  verDiagnostico(turno: Turno){
+    Swal.fire({
+      title: "Consulta del "+turno.fecha,
+      text: turno.diagnostico,
     });
   }
 
@@ -130,7 +289,6 @@ export class TurnosComponent implements OnInit {
   }
 
   generarTurnosDisponibles(disponibilidad: number) {
-
     const fechaActual = new Date();
     fechaActual.setDate(fechaActual.getDate() + 1);
 
@@ -167,5 +325,12 @@ export class TurnosComponent implements OnInit {
     }
 
     return turnosPorDia;
+  }
+
+  limpiarGestionTurnos() {
+    this.turno = undefined;
+    this.fechaElegida = undefined;
+    this.horaElegida = undefined;
+    this.especialistaElegido = undefined;
   }
 }

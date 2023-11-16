@@ -1,42 +1,43 @@
 <div class="contenedor-fondo">
-    <div class="container">
+    <div *ngIf="usuarioPerfil" class="container">
 
         <!--ELEGIR TRAMITE-->
-        <div *ngIf="tramite=='reservar'">
-            <div class="card shadow">
+        <div *ngIf="tramite==''">
+            <div class="card shadow mt-4">
                 <div class="card-header text-center p-3">
-                    <h4>Elija un perfil</h4>
+                    <h4>Gestionar turnos</h4>
                 </div>
                 <div class="card-body">
                     <div class="d-flex row justify-content-center">
-                        <div class="col">
-                            <img src="../../../assets/iconos/icono-paciente.png" width="100%">
-                            <button class="btn btn-primary m-2 w-100" routerLink="/registro-paciente">
-                                Paciente
-                            </button>
+                        <div *ngIf="usuarioPerfil!=='especialista'" class="col-6">
+                            <div class="d-flex flex-column align-items-center">
+                                <img src="../../../assets/iconos/icono-sacar-turno.png" width="50%" class="mb-3">
+                                <button class="btn btn-primary w-75 p-3" (click)="tramite='sacar-turno'">
+                                    Pedir un turno
+                                </button>
+                            </div>
                         </div>
-                        <div class="col">
-                            <img src="../../../assets/iconos/icono-especialista.png" width="100%">
-                            <button class="btn btn-primary m-2 w-100" routerLink="/registro-especialista">
-                                Especialista
-                            </button>
+
+                        <div class="col-6">
+                            <div class="d-flex flex-column align-items-center">
+                                <img src="../../../assets/iconos/icono-turnos.png" width="50%" class="mb-3">
+                                <button class="btn btn-primary w-75 p-3" (click)="tramite='gestionar-turno'">
+                                    Mis turnos
+                                </button>
+                            </div>
                         </div>
-                        <button class="btn btn-secondary w-25 m-2" routerLink="/login">
-                            <h3>
-                                Atrás
-                            </h3>
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="tramite==''">
+        <!--SACAR TURNO-->
+        <div *ngIf="tramite=='sacar-turno'">
             <div class="card mt-5 shadow">
                 <div class="card-header">
-                    <h4 class="text-center">
-                        Sacá tu turno
-                    </h4>
+                    <button class="btn btn-secondary" (click)="tramite=''">
+                        Atrás
+                    </button>
                 </div>
                 <div class="card-body">
                     <div class="progress">
@@ -46,85 +47,171 @@
                         </div>
                     </div>
 
-                    <!--MOSTRAR ESPECIALIDADES-->
-                    <div class="container mt-4">
-                        <label>
-                            <h5 class="text-center">1- Selecciona una especialidad</h5>
-                        </label>
-                        <div class="d-flex mt-3">
-                            <button *ngFor="let especialidad of especialidades" [value]="especialidad.nombre"
-                                class="btn btn-primary border"
-                                (click)="especialidadElegida=especialidad.nombre; filtrarEspecialidad();">
-                                {{especialidad.nombre | capizalizar}}
+                    <!--MOSTRAR TURNO (SI EXISTE)-->
+                    <div *ngIf="turno">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h4 class="card-title my-4">{{fechaElegida.diaMes}} a las {{turno.fecha}}</h4>
+                                <p class="card-text">
+                                    Profesional: <b>{{especialistaElegido?.nombre}} {{especialistaElegido?.apellido}}</b>
+                                </p>
+                                <p class="card-text mt-2">
+                                    Especialidad: <b>{{especialistaElegido!.especialidad | capizalizar}}</b>
+                                </p>
+                                <p class="card-text mt-2">
+                                    Mail: <b>{{especialistaElegido?.mail}}</b>
+                                </p>
+                            </div>
+                            <button class="btn btn-success w-100 mt-4" (click)="confirmarTurno(turno)">
+                                Confirmar turno
                             </button>
                         </div>
                     </div>
 
-                    <!--MOSTRAR ESPECIALISTAS Y TURNOS-->
-                    <div *ngIf="especialidadElegida" class="mt-5">
-                        <div class="container d-flex row">
-                            <div class="col-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        Nuestros profesionales especializados en <b>{{especialidadElegida}}</b>
+                    <div *ngIf="!turno">
+                        <!--MOSTRAR ESPECIALIDADES-->
+                        <div class="container mt-4">
+                            <label>
+                                <h5 class="text-center">Selecciona una especialidad</h5>
+                            </label>
+                            <div class="d-flex mt-3">
+                                <button *ngFor="let especialidad of especialidades" [value]="especialidad.nombre"
+                                    class="btn btn-primary border"
+                                    (click)="especialidadElegida=especialidad.nombre; filtrarEspecialidad();">
+                                    {{especialidad.nombre | capizalizar}}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--MOSTRAR ESPECIALISTAS Y TURNOS-->
+                        <div *ngIf="especialidadElegida" class="mt-5">
+                            <div class="container d-flex row">
+                                <div class="col-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Nuestros profesionales especializados en <b>{{especialidadElegida}}</b>
+                                        </div>
+                                        <div class="lista-scrolleable card-body">
+                                            <div *ngFor="let especialista of especialistas" class="card mt-3 p-2">
+                                                <p class="fw-bold">
+                                                    {{especialista.nombre}} {{especialista.apellido}}
+                                                </p>
+                                                <p>
+                                                    {{especialista.especialidad | capizalizar}}
+                                                </p>
+                                                <button class="btn btn-primary"
+                                                    (click)="elegirEspecialista(especialista)">
+                                                    Consultar turnos disponibles
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="lista-scrolleable card-body">
-                                        <div *ngFor="let especialista of especialistas" class="card mt-3 p-2">
-                                            <p class="fw-bold">
-                                                {{especialista.nombre}} {{especialista.apellido}}
-                                            </p>
-                                            <p>
-                                                {{especialista.especialidad | capizalizar}}
-                                            </p>
-                                            <button class="btn btn-primary" (click)="elegirEspecialista(especialista)">
-                                                Consultar turnos disponibles
+                                </div>
+
+                                <!--ELEGIR DIA-->
+                                <div *ngIf="especialistaElegido" class="col-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Días disponibles para la consulta
+                                        </div>
+                                        <div class="card-body">
+                                            <button *ngFor="let dia of horariosDisponiblesInfo"
+                                                class="btn btn-light m-1" (click)="elegirFecha(dia)">
+                                                {{dia.diaMes}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--ELEGIR HORA-->
+                                <div *ngIf="fechaElegida && !horaElegida" class="mt-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Horarios disponibles para la consulta del día <b>{{fechaElegida.diaMes}}</b>
+                                        </div>
+                                        <div class="card-body">
+                                            <button *ngFor="let hora of fechaElegida.horario"
+                                                class="boton-hora btn btn-light m-1" (click)="elegirHora(hora)">
+                                                {{ hora | date:'HH:mm a' }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--CONFIRMAR TURNO-->
+                                <div *ngIf="horaElegida" class="col mt-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Turno para: <b>{{fechaElegida.diaMes}} a las {{horaElegida | date:'HH:mm a'}}</b>
+                                        </div>
+                                        <div class="mt-2">
+                                            <button class="btn btn-warning w-100" (click)="crearTurno(horaElegida)">
+                                                Continuar
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                            <div *ngIf="especialistaElegido" class="col-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        Días disponibles para la consulta
-                                    </div>
-                                    <div class="card-body">
-                                        <button *ngFor="let dia of horariosDisponiblesInfo" class="btn btn-light m-1"
-                                            (click)="elegirFecha(dia)">
-                                            {{dia.diaMes}}
-                                        </button>
-                                    </div>
+        <!--GESTIONAR TURNO/S-->
+        <div *ngIf="tramite=='gestionar-turno'">
+            <div class="card mt-5 shadow">
+                <div class="card-header">
+                    <button class="btn btn-secondary" (click)="tramite=''">
+                        Atrás
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div *ngFor="let turno of turnos" class="card my-2">
+                        <div class="card-header d-flex justify-content-between align-items-center p-3"
+                        [ngClass]="{
+                            'border-danger': turno.estado==='Rechazado',
+                            'border-secondary': turno.estado==='Cancelado',
+                            'border-info': turno.estado==='Inactivo',
+                            'border-primary': turno.estado==='Aceptado',
+                            'border-success': turno.estado==='Finalizado',
+                        }">
+                            <div [ngClass]="{'text-danger': turno.estado==='Rechazado',
+                                            'text-secondary': turno.estado==='Cancelado'}">
+                                <b>{{turno.estado}}</b> - {{turno.especialidad | capizalizar}} - ({{turno.fecha}}) 
+                            </div>
+                            <div *ngIf="turno.estado==='Aceptado' || turno.estado==='Inactivo'">
+
+                                <!--BOTONES ESPECIALISTA-->
+                                <div *ngIf="usuarioPerfil==='especialista'">
+                                    <button *ngIf="turno.estado!=='Aceptado'"
+                                    class="btn btn-primary m-1" (click)="aceptarTurno(turno)">
+                                        Aceptar turno
+                                    </button>
+
+                                    <button *ngIf="turno.estado==='Aceptado'"
+                                    class="btn btn-success m-1" (click)="finalizarTurno(turno)">
+                                        Finalizar turno
+                                    </button>
+
+                                    <button *ngIf="turno.estado!=='Aceptado'"
+                                    class="btn btn-danger m-1" (click)="rechazarTurno(turno)">
+                                        Rechazar turno
+                                    </button>
                                 </div>
+                                
+                                <button *ngIf="turno.estado==='Inactivo'" class="btn btn-secondary m-1" (click)="cancelarTurno(turno)">
+                                    Cancelar turno
+                                </button>    
                             </div>
 
-                            <div *ngIf="fechaElegida && !horaElegida" class="mt-3">
-                                <div class="card">
-                                    <div class="card-header">
-                                        Horarios disponibles para la consulta del día <b>{{fechaElegida.diaMes}}</b>
-                                    </div>
-                                    <div class="card-body">
-                                        <button *ngFor="let hora of fechaElegida.horario" class="btn btn-light m-1"
-                                            (click)="elegirHora(hora)">
-                                            {{ hora | date:'HH:mm a' }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            <button *ngIf="turno.estado==='Finalizado'" class="btn btn-warning m-1" (click)="verDiagnostico(turno)">
+                                Ver diagnóstico
+                            </button>
 
-                            <div *ngIf="horaElegida" class="col mt-3">
-                                <div class="card">
-                                    <div class="card-header">
-                                        Confirmar turno para <b>{{fechaElegida.diaMes}} a las {{horaElegida | date:'HH:mm a'}}</b>
-                                    </div>
-                                    <div class="mt-2">
-                                        <button class="btn btn-success w-100"
-                                        (click)="confirmarTurno(horaElegida)">
-                                            Confirmar turno
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            <span *ngIf="turno.motivo">
+                                <b>Motivo: </b><i class="text-secondary">{{turno.motivo}}</i>
+                             </span>
                         </div>
                     </div>
                 </div>

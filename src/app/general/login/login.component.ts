@@ -28,6 +28,13 @@ export class LoginComponent implements OnInit {
       especialista: [],
       administrador: []
     };
+  }
+
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      email: [''],
+      password: ['']
+    });
 
     //1 ADMIN
     this.asignarUsuarioAAccesosRapidos('QnzBLjRioZPC58MAfDxedrwjoa32');
@@ -40,13 +47,6 @@ export class LoginComponent implements OnInit {
     this.asignarUsuarioAAccesosRapidos('Y9OLOSPmkbR9yrI66SHl6zBipK92');
     this.asignarUsuarioAAccesosRapidos('EnuBvFtTpPeDcIBV0QOvck9FfuN2');
     this.asignarUsuarioAAccesosRapidos('g3uzAl6X9kTE7NWCalmIPgbTRey2');
-  }
-
-  ngOnInit(): void {
-    this.form = this.fb.group({
-      email: [''],
-      password: ['']
-    });
   }
 
   entrar() {
@@ -66,6 +66,10 @@ export class LoginComponent implements OnInit {
   rellenarFormUsuario(usuario: any) {
     this.form.value.email = usuario?.mail;
     this.form.value.password = "123456";
+
+    console.log(usuario?.mail);
+
+    this.entrar();
   }
 
   asignarUsuarioAAccesosRapidos(id: string) {
@@ -84,13 +88,19 @@ export class LoginComponent implements OnInit {
 
         switch (usuarioPerfil) {
           case 'paciente':
-            this.usuariosAccesoRapido['usuario'].push(objetoUsuario);
+            if (!this.usuariosAccesoRapido.usuario.some((u: { nombre: any; }) => u.nombre === usuarioNombre)) {
+              this.usuariosAccesoRapido['usuario'].push(objetoUsuario);
+            }
             break;
           case 'especialista':
-            this.usuariosAccesoRapido['especialista'].push(objetoUsuario);
+            if (!this.usuariosAccesoRapido.especialista.some((u: { nombre: any; }) => u.nombre === usuarioNombre)) {
+              this.usuariosAccesoRapido['especialista'].push(objetoUsuario);
+            }
             break;
           case 'administrador':
-            this.usuariosAccesoRapido['administrador'].push(objetoUsuario);
+            if (!this.usuariosAccesoRapido.administrador.some((u: { nombre: any; }) => u.nombre === usuarioNombre)) {
+              this.usuariosAccesoRapido['administrador'].push(objetoUsuario);
+            }
             break;
           default:
             break;
