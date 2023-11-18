@@ -1,16 +1,25 @@
-# Clínica online - Franco Sampietro
-
-Esta aplicación permite gestionar todos los trámites de una clínica desde la web.
+# Clínica Online - Franco Sampietro
+Esta aplicación web permite gestionar eficientemente los trámites de una clínica desde cualquier lugar a través de la web.
 
 ## Usuarios
-Los pacientes podrán solicitar consultas con distintos profesionales, poder controlar su estado y dejar una reseña.
+### Pacientes
+Los pacientes tienen la capacidad de solicitar consultas con diversos profesionales, supervisar el estado de sus turnos y dejar reseñas.
 
-Los especialistas podrán gestionar el estado del turno, guardar el diagnóstico y ver la reseña del usuario. Podrá administrar tanto su disponibilidad horaria como sus especialidades, que serán visibles para los pacientes.
+### Especialistas
+Los especialistas pueden gestionar el estado de los turnos, registrar diagnósticos y revisar las reseñas proporcionadas por los pacientes. Además, tienen la facultad de administrar su disponibilidad horaria y las especialidades que ofrecen, las cuales serán visibles para los pacientes registrados.
 
-Los usuarios administradores podrán habilitar al usuario especialista para que esté disponible para recibir consultas, y podrá sacar turnos para distintos pacientes. Tendrá acceso a distintas descargas de documentos para controlar el estado de ingresos de la aplicación y los turnos solicitados.
+### Administradores
+Los administradores tienen el poder de habilitar a los especialistas para que estén disponibles para recibir consultas. También pueden programar turnos para diferentes pacientes y acceder a descargas de documentos esenciales para supervisar el estado financiero de la aplicación y los turnos solicitados.
 
 ## Secciones
+La aplicación se estructura en diversas secciones, brindando una experiencia específica según el perfil del usuario:
 
-La aplicación cuenta con su página de bienvenida con fotos de la clínica, y un ingreso al portal. Luego, el usuario tendrá acceso a distinas secciones según su perfil:
-Datos de la cuenta, que mostrará sus datos y las fotos registradas.
-Gestión de turnos. Donde se podrán solicitar nuevas consultas y tener al alcance la lista de todos los turnos realizados, con su estado.
+Página de Bienvenida: Incluye fotos representativas de la clínica y acceso al portal.
+
+Datos de la Cuenta: Permite a los usuarios visualizar y gestionar sus datos, así como acceder a las fotos registradas.
+
+Gestión de Turnos: Posibilita la solicitud de nuevas consultas y proporciona una lista completa de todos los turnos realizados, indicando su estado actual.
+
+Administración de Usuarios: Reservada para los perfiles administradores, esta sección permite consultar la lista de usuarios especialistas y habilitarlos para completar su registro.
+
+Con esta aplicación, se busca ofrecer una solución integral para la gestión eficaz de los procesos clínicos, mejorando la experiencia tanto para pacientes como para profesionales de la salud.
