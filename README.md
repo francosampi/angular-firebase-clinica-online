@@ -1,27 +1,16 @@
-# FsampiLabo4Tp2
+# Clínica online - Franco Sampietro
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.6.
+Esta aplicación permite gestionar todos los trámites de una clínica desde la web.
 
-## Development server
+## Usuarios
+Los pacientes podrán solicitar consultas con distintos profesionales, poder controlar su estado y dejar una reseña.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Los especialistas podrán gestionar el estado del turno, guardar el diagnóstico y ver la reseña del usuario. Podrá administrar tanto su disponibilidad horaria como sus especialidades, que serán visibles para los pacientes.
 
-## Code scaffolding
+Los usuarios administradores podrán habilitar al usuario especialista para que esté disponible para recibir consultas, y podrá sacar turnos para distintos pacientes. Tendrá acceso a distintas descargas de documentos para controlar el estado de ingresos de la aplicación y los turnos solicitados.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Secciones
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+La aplicación cuenta con su página de bienvenida con fotos de la clínica, y un ingreso al portal. Luego, el usuario tendrá acceso a distinas secciones según su perfil:
+Datos de la cuenta, que mostrará sus datos y las fotos registradas.
+Gestión de turnos. Donde se podrán solicitar nuevas consultas y tener al alcance la lista de todos los turnos realizados, con su estado.
