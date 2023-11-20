@@ -40,19 +40,25 @@
 
         <a *ngIf="usuarioCredenciales?.perfil" routerLink="/perfil"
           class="list-group-item list-group-item-action py-2 ripple">
-          <img src="../../../assets/iconos/icono-navbar-usuario.png" style="width: 25px;">
+          <img src="../../../assets/iconos/navbar/icono-navbar-usuario.png" style="width: 25px;">
           <span class="mx-2">Perfil</span>
         </a>
 
         <a *ngIf="usuarioLogeado" routerLink="/turnos" class="list-group-item list-group-item-action py-2 ripple">
-          <img src="../../../assets/iconos/icono-navbar-turnos.png" style="width: 25px;">
+          <img src="../../../assets/iconos/navbar/icono-navbar-turnos.png" style="width: 25px;">
           <span class="mx-2">Turnos</span>
         </a>
 
         <a *ngIf="usuarioCredenciales?.perfil=='administrador'" routerLink="/usuarios"
           class="list-group-item list-group-item-action py-2 ripple">
-          <img src="../../../assets/iconos/icono-navbar-usuarios.png" style="width: 25px;">
+          <img src="../../../assets/iconos/navbar/icono-navbar-usuarios.png" style="width: 25px;">
           <span class="mx-2">Usuarios</span>
+        </a>
+
+        <a *ngIf="usuarioCredenciales?.perfil=='especialista'" routerLink="/pacientes"
+          class="list-group-item list-group-item-action py-2 ripple">
+          <img src="../../../assets/iconos/navbar/icono-navbar-pacientes.png" style="width: 25px;">
+          <span class="mx-2">Pacientes</span>
         </a>
 
         <a *ngIf="usuarioCredenciales?.perfil" (click)="salir()"

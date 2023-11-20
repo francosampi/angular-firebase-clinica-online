@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { adminGuard } from './guards/admin.guard';
-import { turnosGuard } from './guards/turnos.guard';
 
 const routes: Routes = [
+
+  //ACCESO GENERAL
   { path: "", loadChildren: () => import('./general/home/home.module').then(m => m.HomeModule) },
   { path: "login", loadChildren: () => import('./general/login/login.module').then(m => m.LoginModule) },
   { path: "perfil", loadChildren: () => import('./general/perfil/perfil.module').then(m => m.PerfilModule)},
@@ -14,6 +15,7 @@ const routes: Routes = [
   //ACCESOS LIMITADOS
   { path: "usuarios", loadChildren: () => import('./general/usuarios/usuarios.module').then(m => m.UsuariosModule), canActivate: [adminGuard]},
   { path: "turnos", loadChildren: () => import('./general/turnos/turnos.module').then(m => m.TurnosModule)},
+  { path: "pacientes", loadChildren: () => import('./general/pacientes/pacientes.module').then(m => m.PacientesModule)},
 ];
 
 @NgModule({

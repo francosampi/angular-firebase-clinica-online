@@ -1,18 +1,13 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService implements OnInit {
-
-  usuarioCredenciales: any;
+export class UserService{
 
   constructor(private firestore: AngularFirestore) { }
-
-  ngOnInit(): void {
-  }
 
   getAllUsers(): Observable<any> {
     return this.firestore.collection('usuarios').valueChanges();

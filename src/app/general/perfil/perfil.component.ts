@@ -17,6 +17,7 @@ export class PerfilComponent implements OnInit {
   usuarioDatos: any;
   usuarioFoto: File | undefined;
   usuarioFotoSec: File | undefined;
+  verHistoria: boolean = false;
   disponibilidadHoraria: string = '';
   spinner: boolean = false;
 

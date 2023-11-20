@@ -11,6 +11,14 @@ export class EspecialistaService {
 
   constructor(private auth: AngularFireAuth, private firestore: AngularFirestore, private storage: AngularFireStorage) { }
 
+  getEspecialistas() {
+    return this.firestore.collection('usuarios', ref => ref.where('perfil', '==', 'especialista')).valueChanges();
+  }
+
+  getEspecialistaById(id: string) {
+    return this.firestore.collection('usuarios').doc(id).valueChanges({ idField: 'id' });
+  }
+
   addEspecialista(nuevoEspecialista: Especialista, password: string, foto: any[]): Promise<void> {
     return this.auth.createUserWithEmailAndPassword(nuevoEspecialista.mail, password).then(async (data) => {
       const uid = data.user?.uid;
@@ -31,14 +39,6 @@ export class EspecialistaService {
         return Promise.reject(error);
       });
     });
-  }
-
-  getEspecialistas() {
-    return this.firestore.collection('usuarios', ref => ref.where('perfil', '==', 'especialista')).valueChanges();
-  }
-
-  getEspecialistaById(id: string) {
-    return this.firestore.collection('usuarios').doc(id).valueChanges({ idField: 'id' });
   }
 
   updateEspecialistaDisponibilidadHoraria(id: string, mins: number): Promise<void> {

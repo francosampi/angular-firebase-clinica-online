@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsuariosComponent } from './usuarios.component';
-import { UsuariosRoutingModule } from './usuarios-routing-module';
+import { PacientesComponent } from './pacientes.component';
+import { PacientesRoutingModule } from './pacientes-routing-module';
 import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
 import { HistoriaClinicaModule } from 'src/app/util/historia-clinica/historia-clinica.module';
 
@@ -9,16 +9,16 @@ import { HistoriaClinicaModule } from 'src/app/util/historia-clinica/historia-cl
 
 @NgModule({
   declarations: [
-    UsuariosComponent
+    PacientesComponent
   ],
   imports: [
     CommonModule,
-    UsuariosRoutingModule,
+    PacientesRoutingModule,
     HistoriaClinicaModule,
     SpinnerModule
   ],
   exports: [
-    UsuariosComponent
+    PacientesComponent
   ]
 })
-export class UsuariosModule { }
+export class PacientesModule { }

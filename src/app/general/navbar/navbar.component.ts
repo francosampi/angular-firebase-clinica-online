@@ -23,15 +23,15 @@ export class NavbarComponent implements OnInit {
   constructor(private route: Router, private authService: AuthService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe((user) => {
+    this.authService.getCurrentUser().pipe(untilDestroyed(this)).subscribe((user) => {
       if (user) {
         this.usuarioLogeado = user;
 
-        this.userService.getUserByUid(user?.uid).subscribe((cred) => {
+        this.userService.getUserByUid(user.uid).pipe(untilDestroyed(this)).subscribe((cred) => {
           if (cred) {
             this.usuarioCredenciales = cred;
 
-            this.authService.getUserImagebyUID(user?.uid).subscribe((foto) => {
+            this.authService.getUserImagebyUID(user.uid).pipe(untilDestroyed(this)).subscribe((foto) => {
               if (foto) {
                 this.usuarioFoto = foto;
               }

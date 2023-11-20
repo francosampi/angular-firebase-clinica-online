@@ -4,6 +4,7 @@ import { PerfilComponent } from './perfil.component';
 import { PerfilRoutingModule } from './perfi-routing-module';
 import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
 import { FormsModule } from '@angular/forms';
+import { HistoriaClinicaModule } from '../../util/historia-clinica/historia-clinica.module';
 
 
 
@@ -15,7 +16,8 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     PerfilRoutingModule,
     FormsModule,
-    SpinnerModule
+    SpinnerModule,
+    HistoriaClinicaModule
   ],
   exports: [
     PerfilComponent

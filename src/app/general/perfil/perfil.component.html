@@ -1,8 +1,10 @@
 <div class="contenedor-fondo">
-    <div class="container d-flex justify-content-center">
-        <div class="card mt-5 w-50 shadow">
-            <div class="card-header">
-                <h3 class="text-center">Mi cuenta</h3>
+
+    <!--MI PERFIL-->
+    <div *ngIf="!verHistoria" class="container d-flex justify-content-center">
+        <div *ngIf="usuarioDatos" class="card mt-5 w-50 shadow">
+            <div class="card-header text-center p-3">
+                <h4>Mi cuenta</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -43,7 +45,26 @@
                                 </button>
                             </div>
                         </div>
+                        <div *ngIf="usuarioDatos?.perfil==='paciente'">
+                            <button class="btn btn-info mt-3 w-100" (click)="verHistoria=true;">
+                                Historial clínico
+                            </button>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--HISTORIA CLÍNICA-->
+    <div *ngIf="verHistoria">
+        <div class="card m-4">
+            <div class="card-header">
+                <button class="btn btn-secondary" (click)="verHistoria=false;">
+                    Volver a mi perfil
+                </button>
+                <div class="card-body">
+                    <app-historia-clinica [usuarioObj]="{usuarioId, usuarioDatos}" />
                 </div>
             </div>
         </div>

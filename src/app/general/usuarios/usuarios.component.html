@@ -3,31 +3,55 @@
         <div class="row justify-content-center">
             <div class="col-8">
                 <div class="card shadow">
-                    <div class="card-header text-center p-3">
-                        <h4>Listado de usuarios</h4>
-                    </div>
-                    <div class="lista-scrolleable card-body">
-                        <div *ngFor="let usuario of listaUsuarios" class="card p-2 mx-2 my-3 justify-content-center shadow-sm">
-                            <div class="card-body align-items-center">
-                                <p>Usuario: <b>{{usuario.mail}}</b></p>
-                                <hr>
-                                <p>Perfil: <b>{{usuario.perfil}}</b></p>
-                                <p *ngIf="usuario.especialidad">Especialidad: <b>{{usuario.especialidad}}</b></p>
 
-                                <div *ngIf="usuario.habilitado===true" class="d-flex row align-items-center">
-                                    <p class="col-md-8">
-                                        Estado: <b style="color: forestgreen">HABILITADO</b>
-                                    </p>
-                                    <button class="col-md-4 btn btn-secondary w-25" (click)="habilitarUsuario(usuario.mail, false)">DESHABILITAR</button>
-                                </div>
-                                
-                                <div *ngIf="usuario.habilitado===false" class="d-flex row align-items-center">
-                                    <p class="col-md-8">
-                                        Estado: <b style="color: crimson">SIN HABILITAR</b>
-                                    </p>
-                                    <button class="col-md-4 btn btn-secondary w-25" (click)="habilitarUsuario(usuario.mail, true)">HABILITAR</button>
+                    <!--LISTADO DE USUARIOS-->
+                    <div *ngIf="!verHistoria">
+                        <div class="card-header p-3">
+                            <button class="btn btn-info" (click)="verHistoria=true;">
+                                Ver historia clínica de pacientes
+                            </button>
+                            <h4 class="text-center mt-3">Listado de usuarios</h4>
+                        </div>
+                        <div class="lista-scrolleable card-body">
+                            <div *ngFor="let usuario of listaUsuarios"
+                                class="card p-2 mx-2 my-3 justify-content-center shadow-sm">
+                                <div class="card-body align-items-center">
+                                    <p>Usuario: <b>{{usuario.mail}}</b></p>
+                                    <hr>
+                                    <p>Perfil: <b>{{usuario.perfil}}</b></p>
+                                    <p *ngIf="usuario.especialidad">Especialidad: <b>{{usuario.especialidad}}</b></p>
+
+                                    <div *ngIf="usuario.habilitado===true" class="d-flex row align-items-center">
+                                        <p class="col-md-8">
+                                            Estado: <b style="color: forestgreen">HABILITADO</b>
+                                        </p>
+                                        <button class="col-md-4 btn btn-secondary w-25"
+                                            (click)="habilitarUsuario(usuario.mail, false)">DESHABILITAR</button>
+                                    </div>
+
+                                    <div *ngIf="usuario.habilitado===false" class="d-flex row align-items-center">
+                                        <p class="col-md-8">
+                                            Estado: <b style="color: crimson">SIN HABILITAR</b>
+                                        </p>
+                                        <button class="col-md-4 btn btn-secondary w-25"
+                                            (click)="habilitarUsuario(usuario.mail, true)">HABILITAR</button>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+
+                    <!--HISTORIA CLÍNICA DE PACIENTES-->
+                    <div *ngIf="verHistoria">
+                        <div class="card-header p-3">
+                            <button class="btn btn-info" (click)="verHistoria=false;">
+                                Ver listado de usuarios
+                            </button>
+                            <h4 class="text-center mt-3">Historia clínica de clientes</h4>
+                        </div>
+                        <div class="card-body">
+                            <app-historia-clinica [usuarioObj]="{usuarioDatos}" />
                         </div>
                     </div>
                 </div>
