@@ -27,12 +27,11 @@ export class NavbarComponent implements OnInit {
       if (user) {
         this.usuarioLogeado = user;
 
-        this.userService.getUserByUid(user.uid).subscribe((cred) => {
-
+        this.userService.getUserByUid(user?.uid).subscribe((cred) => {
           if (cred) {
             this.usuarioCredenciales = cred;
 
-            this.authService.getUserImagebyUID(user.uid).subscribe((foto) => {
+            this.authService.getUserImagebyUID(user?.uid).subscribe((foto) => {
               if (foto) {
                 this.usuarioFoto = foto;
               }

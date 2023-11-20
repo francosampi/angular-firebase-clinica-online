@@ -60,4 +60,11 @@ export class AuthService {
 
     return pfpImageRef?.getDownloadURL();
   }
+
+  getUserSecondImagebyUID(uid: string): Observable<any> {
+    const filePath1 = uid + '/pfp2';
+    const pfpImageRef = this.storage.ref(filePath1);
+
+    return pfpImageRef?.getDownloadURL();
+  }
 }

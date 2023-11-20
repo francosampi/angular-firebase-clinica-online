@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { TurnosComponent } from './turnos.component';
 import { TurnosRoutingModule } from './turnos-routing-module';
 import { SpinnerModule } from 'src/app/util/spinner/spinner.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CapizalizarPipe } from '../../pipes/capitalizar/capizalizar.pipe';
 
 
@@ -17,6 +17,8 @@ import { CapizalizarPipe } from '../../pipes/capitalizar/capizalizar.pipe';
     TurnosRoutingModule,
     FormsModule,
     SpinnerModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     TurnosComponent

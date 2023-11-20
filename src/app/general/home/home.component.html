@@ -1,6 +1,6 @@
 <div class="container-fluid contenedor-fondo">
     <div class="d-flex justify-content-center mt-5 shadow">
-        <div class="carousel slide" data-ride="carousel" style="width: 120vh;">
+        <div class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item" [class.active]="activeSlideIndex === 0">
                     <img class="carrusel-imagen" src="../../../assets/imagenes/imagen-carrusel-1.avif"
@@ -24,22 +24,23 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
             </a>
         </div>
-        <div class="p-4 shadow border-top bg-light justify-content-center">
-            <div class="d-flex align-items-center">
-                <img src="../../../assets/iconos/icono-clinica-online.png" width="90px">
-                <h1 class="m-3 text-center">Nuestra clínica online</h1>
-            </div>
+        <div class="p-4 shadow border-top bg-light d-flex flex-column justify-content-between">
+            <div>
+                <div class="d-flex align-items-center">
+                    <img src="../../../assets/iconos/icono-clinica-online.png" width="90px">
+                    <h1 class="m-3 text-center">Nuestra clínica online</h1>
+                </div>
 
-            <div class="mb-4">
-                <ul>
-                    <li *ngFor="let item of items">
-                        <img src="../../../assets/iconos/icono-flecha.png" width="32px">
-                        {{item}}
-                    </li>
-                </ul>
+                <div class="mb-4">
+                    <ul>
+                        <li *ngFor="let item of items">
+                            <img src="../../../assets/iconos/icono-flecha.png" width="32px">
+                            {{item}}
+                        </li>
+                    </ul>
+                </div>
             </div>
-
-            <button  class="btn btn-lg btn-primary mt-4 w-100" routerLink="/login">
+            <button class="btn btn-lg btn-primary mt-4 w-100" routerLink="/login">
                 Accede al portal
             </button>
         </div>

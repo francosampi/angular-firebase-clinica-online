@@ -26,6 +26,10 @@ export class UserService implements OnInit {
     return this.firestore.collection('usuarios', ref => ref.where('perfil', '==', 'especialista')).valueChanges();
   }
 
+  getAllEspecialistasWithId(): Observable<any> {
+    return this.firestore.collection('usuarios', ref => ref.where('perfil', '==', 'especialista')).snapshotChanges();
+  }
+
   getUserByUid(uid: string): Observable<any> {
     return this.firestore.collection('usuarios').doc(uid).valueChanges();
   }

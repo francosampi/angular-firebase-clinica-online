@@ -6,8 +6,9 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4 d-flex justify-content-center align-items-start">
+                    <div class="col-md-4 d-flex flex-column justify-content-center align-items-start">
                         <img class="foto-perfil shadow" [src]="usuarioFoto">
+                        <img *ngIf="usuarioFotoSec" class="foto-perfil shadow" [src]="usuarioFotoSec">
                     </div>
                     <div class="col-md-8 mt-2">
                         <p>Nombre: <b>{{usuarioDatos?.nombre}}</b></p>

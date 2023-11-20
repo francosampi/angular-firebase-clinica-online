@@ -13,6 +13,12 @@ export class TurnosService {
     return this.firestore.collection('turnos').add(turno);
   }
 
+  getTurnos(){
+    return this.firestore.collection('turnos', ref => ref
+    .orderBy('fecha', 'desc')
+  ).snapshotChanges();
+  }
+
   getTurnosByUsuarioId(id: string) {
     return this.firestore.collection('turnos', ref => ref
       .where('idPaciente', '==', id)

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Observable, combineLatest, forkJoin, map, of, switchMap } from 'rxjs';
 import { Especialidad } from 'src/app/interfaces/especialidad';
 import { Especialista } from 'src/app/interfaces/perfiles';
 import { Diagnostico, Resenia, Turno } from 'src/app/interfaces/turno';
@@ -21,11 +22,19 @@ export class TurnosComponent implements OnInit {
   tramite: string = '';
   turno: Turno | undefined;
   turnos: any[] = [];
+  turnosFiltrados: any[] = [];
+  filtroForm: FormGroup;
   especialistaId: string = '';
-  especialistas$: Observable<any>;
   especialistas: Especialista[] = [];
+  especialistasFiltrados: any[] = [];
   especialistaElegido: Especialista | undefined;
   especialidades: Especialidad[] = [];
+  especialidadesImg: string[] = [
+    '../../assets/iconos/especialidades/cardiologia.png',
+    '../../assets/iconos/especialidades/psiquiatria.png',
+    '../../assets/iconos/especialidades/pediatria.png',
+    '../../assets/iconos/especialidades/dermatologia.png',
+  ];
   especialidadElegida: string = '';
   horariosDisponiblesInfo: any;
   diasDisponibles: string[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -37,8 +46,15 @@ export class TurnosComponent implements OnInit {
   spinner: boolean = false;
 
   constructor(private authService: AuthService, private userService: UserService,
-    private especialidadesService: EspecialidadesService, private turnosService: TurnosService) {
-    this.especialistas$ = this.userService.getAllEspecialistas();
+    private especialidadesService: EspecialidadesService, private turnosService: TurnosService,
+    private fb: FormBuilder) {
+
+    this.filtroForm = this.fb.group({
+      paciente: [''],
+      especialista: [''],
+      estado: [''],
+      especialidad: ['']
+    });
   }
 
   ngOnInit(): void {
@@ -49,33 +65,89 @@ export class TurnosComponent implements OnInit {
         this.userService.getUserByUid(user.uid).subscribe((cred) => {
           this.usuarioPerfil = cred.perfil;
 
-          if (this.usuarioPerfil === 'especialista') {
-            this.turnosService.getTurnosByEspecialistaId(this.usuarioId).subscribe((listaTurnos) => {
-              this.turnos = listaTurnos.map(turno => {
+          let turnosObservable;
+
+          switch (this.usuarioPerfil) {
+            case 'paciente':
+              turnosObservable = this.turnosService.getTurnosByUsuarioId(this.usuarioId);
+              break;
+
+            case 'especialista':
+              turnosObservable = this.turnosService.getTurnosByEspecialistaId(this.usuarioId);
+              break;
+
+            default:
+              turnosObservable = this.turnosService.getTurnos();
+              break;
+          }
+
+          turnosObservable.pipe(
+            switchMap((listaTurnos) => {
+              const turnosDetalleObservable = listaTurnos.map(turno => {
                 const id = turno.payload.doc.id;
                 const datos: any = turno.payload.doc.data();
 
-                return { id, ...datos } as Turno;
-              });
-            });
-          }
-          else {
-            this.turnosService.getTurnosByUsuarioId(this.usuarioId).subscribe((listaTurnos) => {
-              this.turnos = listaTurnos.map(turno => {
-                const id = turno.payload.doc.id;
-                const datos: any = turno.payload.doc.data();
+                return this.userService.getUserByUid(datos.idPaciente).pipe(
+                  switchMap(pac => {
+                    if (pac) {
+                      const nombrePaciente = pac.nombre + ' ' + pac.apellido;
 
-                return { id, ...datos } as Turno;
+                      return this.userService.getUserByUid(datos.idEspecialista).pipe(
+                        switchMap(esp => {
+                          if (esp) {
+                            const nombreEspecialista = esp.nombre + ' ' + esp.apellido;
+                            return [{ id, nombrePaciente, nombreEspecialista, ...datos } as Turno];
+                          }
+
+                          return [];
+                        })
+                      );
+                    }
+                    return [];
+                  })
+                );
               });
-            });
-          }
+
+              return combineLatest(turnosDetalleObservable);
+            })
+          ).subscribe(turnos => {
+            this.turnos = turnos;
+            this.turnosFiltrados = this.turnos;
+            this.filtrarTurnos();
+          });
         });
       }
     });
 
+    this.userService.getAllEspecialistasWithId().pipe(
+      switchMap((lista) => {
+        if (lista) {
+          const observables = lista.map((element: any) => {
+            const id = element.payload.doc.id;
+            const data = element.payload.doc.data();
+
+            return this.authService.getUserImagebyUID(id).pipe(
+              map(foto => ({ id, ...data, foto }))
+            );
+          });
+
+          return forkJoin(observables);
+        }
+
+        return of([]);
+      })
+    ).subscribe((especialistas) => {
+      this.especialistas = especialistas as any;
+    });
+
     this.especialidadesService.getAllEspecialidades().subscribe((listaEspecialidades) => {
       if (listaEspecialidades) {
-        this.especialidades = listaEspecialidades;
+
+        this.especialidades = listaEspecialidades.map((especialidad: Especialidad, index: any) => {
+          const imgIndex = index % this.especialidadesImg.length;
+
+          return { ...especialidad, imagen: this.especialidadesImg[imgIndex] };
+        });
       }
     });
 
@@ -85,15 +157,33 @@ export class TurnosComponent implements OnInit {
   filtrarEspecialidad() {
     this.spinner = true;
 
-    this.especialistas$.subscribe((lista: Especialista[]) => {
-      if (lista) {
-        this.especialistas = lista.filter(especialista => especialista.especialidad === this.especialidadElegida && especialista.habilitado === true);
+    this.especialistasFiltrados = this.especialistas.filter(especialista => especialista.especialidad === this.especialidadElegida && especialista.habilitado === true);
 
-        this.tituloProgreso = '2- Selecciona un profesional';
-        this.porcentajeProgreso = 20;
-        this.spinner = false;
-      }
-    });
+    this.tituloProgreso = '2- Selecciona un profesional';
+    this.porcentajeProgreso = 20;
+    this.spinner = false;
+  }
+
+  filtrarTurnos() {
+    const pacienteFiltro = this.filtroForm.value.paciente.toLowerCase();
+    const especialistaFiltro = this.filtroForm.value.especialista.toLowerCase();
+    const estadoFiltro = this.filtroForm.value.estado.toLowerCase();
+    const especialidadFiltro = this.filtroForm.value.especialidad.toLowerCase();
+
+    this.turnosFiltrados = this.turnos.filter(turno =>
+      turno.nombrePaciente.toLowerCase().includes(pacienteFiltro) &&
+      turno.nombreEspecialista.toLowerCase().includes(especialistaFiltro) &&
+      turno.estado.toLowerCase().includes(estadoFiltro) &&
+      turno.especialidad.toLowerCase().includes(especialidadFiltro)
+    );
+  }
+
+  elegirEspecialidad(especialidadNombre: string) {
+    this.especialidadElegida = especialidadNombre;
+
+    this.especialistaElegido = undefined;
+    this.fechaElegida = undefined;
+    this.horaElegida = undefined;
   }
 
   elegirEspecialista(especialista: Especialista) {
@@ -105,6 +195,9 @@ export class TurnosComponent implements OnInit {
         this.especialistaId = id;
       }
     });
+
+    this.fechaElegida = undefined;
+    this.horaElegida = undefined;
 
     this.tituloProgreso = '3- Selecciona una fecha disponible';
     this.porcentajeProgreso = 40;
@@ -130,6 +223,7 @@ export class TurnosComponent implements OnInit {
 
   elegirHora(hora: any) {
     this.horaElegida = hora;
+
     this.tituloProgreso = '5- Corrobora la información antes de continuar';
     this.porcentajeProgreso = 80;
   }
@@ -337,7 +431,6 @@ export class TurnosComponent implements OnInit {
       if (result.isConfirmed) {
 
         this.spinner = true;
-
         comentario = result.value
 
         const resenia: Resenia = {
@@ -382,15 +475,15 @@ export class TurnosComponent implements OnInit {
     fechaActual.setDate(fechaActual.getDate() + 1);
 
     const fechaFin = new Date(fechaActual.getTime() + 15 * 24 * 60 * 60 * 1000);
-    const turnosPorDia: { horario: Date[], nombreDia: string, diaMes: string, mesAnio: string }[] = [];
+    const turnosPorDia: { horario: Date[], nombreDia: string, dia: string, mes: string, mesAnio: string }[] = [];
 
     let fechaIterativa = new Date(fechaActual);
 
     while (fechaIterativa <= fechaFin) {
       const diaDeLaSemana = fechaIterativa.getDay();
       const nombreDia = this.diasDisponibles[diaDeLaSemana];
-      const dia = fechaIterativa.getDate();
-      const diaMes = `${nombreDia} ${dia}`;
+      const dia = fechaIterativa.getDate().toString();
+      const mes = fechaIterativa.getMonth().toString();
       const mesAnio = fechaIterativa.toLocaleString('es-AR', { month: 'long', year: 'numeric', timeZone: 'America/Argentina/Buenos_Aires' });
 
       const horaInicio = 8;
@@ -408,7 +501,7 @@ export class TurnosComponent implements OnInit {
         horario.push(turno);
       }
 
-      turnosPorDia.push({ horario, nombreDia, diaMes, mesAnio });
+      turnosPorDia.push({ horario, nombreDia, dia, mes, mesAnio });
 
       fechaIterativa.setDate(fechaIterativa.getDate() + 1);
     }

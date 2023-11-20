@@ -13,9 +13,10 @@ import Swal from 'sweetalert2';
 })
 export class PerfilComponent implements OnInit {
 
-  usuarioId: string='';
+  usuarioId: string = '';
   usuarioDatos: any;
   usuarioFoto: File | undefined;
+  usuarioFotoSec: File | undefined;
   disponibilidadHoraria: string = '';
   spinner: boolean = false;
 
@@ -24,30 +25,44 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getCurrentUser().pipe(untilDestroyed(this)).subscribe((user) => {
 
-      this.usuarioId = user.uid;
+      if (user) {
+        this.usuarioId = user.uid;
 
-      this.userService.getUserByUid(user!.uid).pipe(untilDestroyed(this)).subscribe((user) => {
-        this.usuarioDatos = user;
-      });
+        this.userService.getUserByUid(user.uid).pipe(untilDestroyed(this)).subscribe((cred) => {
+          if (cred) {
+            this.usuarioDatos = cred;
 
-      this.authService.getUserImagebyUID(user!.uid).pipe(untilDestroyed(this)).subscribe((foto) => {
-        this.usuarioFoto = foto;
-      });
+            this.authService.getUserImagebyUID(user.uid).pipe(untilDestroyed(this)).subscribe((foto) => {
+              if (foto) {
+                this.usuarioFoto = foto;
+              }
+            });
+
+            if (this.usuarioDatos.perfil === 'paciente') {
+              this.authService.getUserSecondImagebyUID(user.uid).pipe(untilDestroyed(this)).subscribe((foto2) => {
+                if (foto2) {
+                  this.usuarioFotoSec = foto2;
+                }
+              });
+            }
+          }
+        });
+      }
     });
   }
 
   asignarDisponibilidadHoraria(mins: string) {
-    this.spinner=true;
+    this.spinner = true;
 
     const minutos: number = parseInt(mins);
 
-    this.especialistaService.updateEspecialistaDisponibilidadHoraria(this.usuarioId, minutos).then(()=>{
-      Swal.fire('¡Listo!', 'Disponibilidad asignada a '+this.disponibilidadHoraria+' minutos por turno.', 'success');
-    }).catch((error)=>{
+    this.especialistaService.updateEspecialistaDisponibilidadHoraria(this.usuarioId, minutos).then(() => {
+      Swal.fire('¡Listo!', 'Disponibilidad asignada a ' + this.disponibilidadHoraria + ' minutos por turno.', 'success');
+    }).catch((error) => {
       Swal.fire('¡Ups!', 'Ocurrió un error asignando la disponibilidad horaria.', 'error');
       console.log(error);
-    }).finally(()=>{
-      this.spinner=false;
+    }).finally(() => {
+      this.spinner = false;
     });
   }
 }
