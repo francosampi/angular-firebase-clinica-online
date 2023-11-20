@@ -10,13 +10,27 @@ export class HistoriaClinicaService {
 
   constructor(private firestore: AngularFirestore) { }
 
-  addHistoriaClinica(historiaClinica: Historiaclinica): Promise<any>{
+  addHistoriaClinica(historiaClinica: Historiaclinica): Promise<any> {
     return this.firestore.collection('historia-clinica').add(historiaClinica);
   }
 
-  getHistoriaClinicaByEspecialistaId(uid: string): Observable<any> {
+  getHistoriaClinica(idPaciente: string | undefined, idEspecialista: string | undefined): Observable<any> {
+    let observable;
+
+    if (idEspecialista) {
+      if (idPaciente) {
+        observable = this.firestore
+          .collection('historia-clinica', ref => ref
+            .where('idEspecialista', '==', idEspecialista)
+            .where('idPaciente', '==', idPaciente)).snapshotChanges();
+      }
+      else {
+        observable = this.firestore
+          .collection('historia-clinica', ref => ref
+            .where('idEspecialista', '==', idEspecialista)).snapshotChanges();
+      }
+    }
     return this.firestore
-      .collection('historia-clinica', ref => ref
-      .where('idEspecialista', '==', uid)).snapshotChanges();
+      .collection('historia-clinica').snapshotChanges();
   }
 }

@@ -1,3 +1,13 @@
 <div class="card">
-
+    <div *ngFor="let registro of historiaClinica" class="card-body">
+        {{registro.fecha}}
+        <hr>
+        <b>Altura: </b>{{registro.ficha.altura}} metros.
+        <hr>
+        <b>Peso: </b>{{registro.ficha.peso}} kg.
+        <hr>
+        <b>Temperatura: </b>{{registro.ficha.temperatura}} °C
+        <hr>
+        <b>Presión: </b>{{registro.ficha.presion}} mm Hg
+    </div>
 </div>

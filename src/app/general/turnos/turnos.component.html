@@ -1,8 +1,5 @@
 <div class="contenedor-fondo">
-
-    
-
-    <div *ngIf="usuarioPerfil" class="container">
+    <div *ngIf="usuarioPerfil" class="container justify-content-center">
 
         <!--ELEGIR TRAMITE-->
         <div *ngIf="tramite==''">
@@ -171,14 +168,13 @@
             </div>
         </div>
 
-        <!--GESTIONAR TURNO/S-->
-        <div *ngIf="tramite=='gestionar-turno'">
-            <div class="card mt-5 shadow">
+        <!--GESTIONAR TURNO/S E HISTORIA CLÍNICA-->
+        <div class="d-flex justify-content-center" *ngIf="tramite=='gestionar-turno'">
+            <div *ngIf="!turnoAFinalizar" class="card mt-5 shadow">
                 <div class="card-header">
                     <button class="btn btn-secondary" (click)="tramite=''">
                         Atrás
                     </button>
-
                     <div>
                         <form [formGroup]="filtroForm" class="d-flex flex-row justify-content-between mt-3">
                             <input class="form-control" type="text" formControlName="paciente"
@@ -223,7 +219,7 @@
                                     </button>
 
                                     <button *ngIf="turno.estado==='Aceptado'" class="btn btn-success m-1"
-                                        (click)="finalizarTurno(turno)">
+                                        (click)="irAFinalizarTurno(turno)">
                                         Finalizar turno
                                     </button>
 
@@ -264,6 +260,87 @@
                             </span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div *ngIf="turnoAFinalizar" class="card mt-5 w-50 shadow">
+                <div class="card-header">
+                    <button class="btn btn-secondary" (click)="turnoAFinalizar=undefined;">
+                        Volver a mis turnos
+                    </button>
+                </div>
+                <div class="card-body">
+                    <form class="row" [formGroup]="historiaClinicaForm"
+                    (ngSubmit)="finalizarTurno(turnoAFinalizar)">
+                        <div class="col-md-6 mt-3">
+                            <label for="observacion">Observación</label>
+                            <div class="input-group">
+                                <textarea type="text" class="form-control" formControlName="observacion"
+                                    [ngClass]="{'is-invalid': historiaClinicaForm.get('observacion')?.invalid }" rows="5">
+                                </textarea>
+                            </div>
+
+                            <div class="mt-3">
+                                <label for="tratamiento">Tratamiento</label>
+                                <div class="input-group">
+                                    <textarea type="text" class="form-control" formControlName="tratamiento"
+                                        [ngClass]="{'is-invalid': historiaClinicaForm.get('tratamiento')?.invalid }" rows="4">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="altura">Altura</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" formControlName="altura" placeholder="Altura"
+                                    [ngClass]="{'is-invalid': historiaClinicaForm.get('altura')?.invalid }">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">metros</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <label for="peso">Peso</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" formControlName="peso" placeholder="Peso"
+                                        [ngClass]="{'is-invalid': historiaClinicaForm.get('peso')?.invalid }">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">kilos</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <label for="temperatura">Temperatura</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" formControlName="temperatura"
+                                        placeholder="Temperatura"
+                                        [ngClass]="{'is-invalid': historiaClinicaForm.get('temperatura')?.invalid }">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">°C</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <label for="presion">Presión</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" formControlName="presion"
+                                        placeholder="Presión"
+                                        [ngClass]="{'is-invalid': historiaClinicaForm.get('presion')?.invalid }">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">mm Hg</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button class="btn btn-success w-100"
+                            [disabled]="historiaClinicaForm.invalid" type="submit">
+                                Confirmar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -12,19 +12,20 @@ import Swal from 'sweetalert2';
 })
 export class PacientesComponent implements OnInit {
 
-  usuarioId: string = '';
+  especialistaId: string = ''; //Especialista logeado
   usuarioDatos: any;
   pacientes: { datos: Paciente, foto: any }[] = [];
   verPacientes: boolean = true;
+  verHistoriaPaciente: any = undefined;
 
   constructor(private authService: AuthService, private userService: UserService, private turnosService: TurnosService) { }
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe((user) => {
       if (user) {
-        this.usuarioId = user.uid;
+        this.especialistaId = user.uid;
 
-        this.userService.getUserByUid(this.usuarioId).subscribe((cred) => {
+        this.userService.getUserByUid(this.especialistaId).subscribe((cred) => {
 
           if (cred) {
             this.usuarioDatos = cred;
@@ -32,7 +33,7 @@ export class PacientesComponent implements OnInit {
         });
 
         //Traer pacientes con los cuales se tiene al menos un turno
-        this.turnosService.getTurnosByEspecialistaId(this.usuarioId).subscribe((turnos) => {
+        this.turnosService.getTurnosByEspecialistaId(this.especialistaId).subscribe((turnos) => {
           const pacientesSet = new Set<string>();
 
           turnos.forEach((turno: any) => {

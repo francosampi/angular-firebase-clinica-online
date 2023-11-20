@@ -15,6 +15,7 @@ import { environment } from '../environments/environments';
 import { NavbarModule } from './general/navbar/navbar.module';
 import { FooterModule } from './general/footer/footer.module';
 import { CapitalizacionDirective } from './directives/capitalizacion.directive';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { CapitalizacionDirective } from './directives/capitalizacion.directive';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    NgbModule,
   ],
   providers: [
     {provide: FIREBASE_OPTIONS, useValue: environment.firebase}

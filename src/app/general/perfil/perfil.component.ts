@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class PerfilComponent implements OnInit {
 
-  usuarioId: string = '';
+  usuarioId?: string | undefined;
   usuarioDatos: any;
   usuarioFoto: File | undefined;
   usuarioFotoSec: File | undefined;
@@ -57,13 +57,17 @@ export class PerfilComponent implements OnInit {
 
     const minutos: number = parseInt(mins);
 
-    this.especialistaService.updateEspecialistaDisponibilidadHoraria(this.usuarioId, minutos).then(() => {
-      Swal.fire('¡Listo!', 'Disponibilidad asignada a ' + this.disponibilidadHoraria + ' minutos por turno.', 'success');
-    }).catch((error) => {
-      Swal.fire('¡Ups!', 'Ocurrió un error asignando la disponibilidad horaria.', 'error');
-      console.log(error);
-    }).finally(() => {
-      this.spinner = false;
-    });
+    if(this.usuarioId)
+    {
+      this.especialistaService.updateEspecialistaDisponibilidadHoraria(this.usuarioId, minutos).then(() => {
+        Swal.fire('¡Listo!', 'Disponibilidad asignada a ' + this.disponibilidadHoraria + ' minutos por turno.', 'success');
+      }).catch((error) => {
+        Swal.fire('¡Ups!', 'Ocurrió un error asignando la disponibilidad horaria.', 'error');
+        console.log(error);
+      }).finally(() => {
+        this.spinner = false;
+      });
+    }
+
   }
 }

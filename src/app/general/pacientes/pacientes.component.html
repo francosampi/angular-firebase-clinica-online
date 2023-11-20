@@ -6,10 +6,7 @@
                     <h4>Mis pacientes</h4>
                 </div>
                 <div *ngIf="usuarioDatos" class="card-body">
-                    <!--
-                        <app-historia-clinica [usuarioObj]="{usuarioId, usuarioDatos}" />
-                    -->
-                    <div *ngIf="pacientes">
+                    <div *ngIf="pacientes && !verHistoriaPaciente">
                         <div *ngFor="let paciente of pacientes" class="card">
                             <div class="card-body d-flex flex-row justify-content-between">
                                 <div class="d-flex flex-column">
@@ -17,7 +14,8 @@
                                     <span class="mt-3">{{paciente.datos.nombre}} {{paciente.datos.apellido}}</span>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <button class="btn btn-light p-2 d-flex flex-row justify-content-between align-items-center shadow-sm">
+                                    <button class="btn btn-light p-2 d-flex flex-row justify-content-between align-items-center shadow-sm"
+                                    (click)="verHistoriaPaciente=paciente">
                                         Historia clínica
                                         <img src="../../../assets/iconos/icono-historia-clinica.png" width="25px">
                                     </button>
@@ -29,6 +27,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div *ngIf="verHistoriaPaciente">
+                        <app-historia-clinica [usuarioObj]="{usuarioId: verHistoriaPaciente.datos.id, especialistaId: especialistaId}" />
                     </div>
                 </div>
             </div>
