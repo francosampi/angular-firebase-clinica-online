@@ -175,24 +175,106 @@
                     <button class="btn btn-secondary" (click)="tramite=''">
                         Atrás
                     </button>
-                    <div>
-                        <form [formGroup]="filtroForm" class="d-flex flex-row justify-content-between mt-3">
-                            <input class="form-control" type="text" formControlName="paciente"
-                                placeholder="Filtrar por paciente" (input)="filtrarTurnos()">
+                    <form [formGroup]="filtroForm" class="d-flex flex-row justify-content-between mt-3">
+                        <input class="form-control" type="text" formControlName="paciente"
+                            placeholder="Filtrar por paciente" (input)="filtrarTurnos()">
 
-                            <input class="form-control" type="text" formControlName="especialista"
-                                placeholder="Filtrar por especialista" (input)="filtrarTurnos()">
+                        <input class="form-control" type="text" formControlName="especialista"
+                            placeholder="Filtrar por profesional" (input)="filtrarTurnos()">
 
-                            <input class="form-control" type="text" formControlName="estado"
-                                placeholder="Filtrar por estado" (input)="filtrarTurnos()">
+                        <input class="form-control" type="text" formControlName="especialidad"
+                            placeholder="Filtrar por especialidad" (input)="filtrarTurnos()">
 
-                            <input class="form-control" type="text" formControlName="especialidad"
-                                placeholder="Filtrar por especialidad" (input)="filtrarTurnos()">
-                        </form>
-                    </div>
+                        <input class="form-control" type="text" formControlName="fecha"
+                            placeholder="Filtrar por fecha" (input)="filtrarTurnos()">
+
+                        <input class="form-control" type="text" formControlName="estado"
+                            placeholder="Filtrar por estado" (input)="filtrarTurnos()">
+                    </form>
                 </div>
-
                 <div class="card-body">
+                    <table class="table table-bordered table-hover m-2">
+                        <thead>
+                            <tr>
+                                <th scope="col">Paciente</th>
+                                <th scope="col">Profesional</th>
+                                <th scope="col">Especialidad</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Gestión</th>
+                                <th scope="col">Motivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let turno of turnosFiltrados" [ngClass]="{
+                                'table-danger': turno.estado==='Rechazado',
+                                'table-secondary': turno.estado==='Cancelado',
+                                'table-light': turno.estado==='Inactivo',
+                                'table-primary': turno.estado==='Aceptado',
+                                'table-success': turno.estado==='Finalizado',
+                            }">
+                                <td>{{turno.nombrePaciente}}</td>
+                                <td>{{turno.nombreEspecialista}}</td>
+                                <td>{{turno.especialidad | capizalizar}}</td>
+                                <td><i>{{turno.fecha}}</i></td>
+                                <td><b>{{turno.estado}}</b></td>
+
+                                <td>
+                                    <div *ngIf="turno.estado==='Aceptado' || turno.estado==='Inactivo'">
+                                        <div *ngIf="usuarioPerfil==='especialista'">
+                                            <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-primary btn-sm m-1"
+                                                (click)="aceptarTurno(turno)">
+                                                Aceptar turno
+                                            </button>
+
+                                            <button *ngIf="turno.estado==='Aceptado'" class="btn btn-success btn-sm m-1"
+                                                (click)="irAFinalizarTurno(turno)">
+                                                Finalizar turno
+                                            </button>
+
+                                            <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-danger btn-sm m-1"
+                                                (click)="rechazarTurno(turno)">
+                                                Rechazar turno
+                                            </button>
+                                        </div>
+
+                                        <button *ngIf="turno.estado==='Inactivo'" class="btn btn-secondary btn-sm m-1"
+                                            (click)="cancelarTurno(turno)">
+                                            Cancelar turno
+                                        </button>
+                                    </div>
+
+
+                                    <div *ngIf="turno.estado==='Finalizado'">
+                                        <button *ngIf="usuarioPerfil=='especialista'" class="btn btn-warning btn-sm m-1"
+                                            (click)="verDiagnostico(turno)"
+                                            [disabled]="turno.diagnostico?.observacion===undefined">
+                                            Ver diagnóstico
+                                        </button>
+
+                                        <!--BOTON PACIENTE-->
+                                        <button *ngIf="usuarioPerfil=='paciente' && turno.resenia?.comentario===undefined"
+                                            class="btn btn-primary btn-sm m-1" (click)="subirResenia(turno)">
+                                            Subir reseña
+                                        </button>
+
+                                        <button class="btn btn-warning btn-sm m-1"
+                                            [disabled]="turno.resenia?.comentario==undefined"
+                                            (click)="verResenia(turno)">
+                                            Ver reseña
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i *ngIf="turno.motivo" class="text-secondary">{{turno.motivo}}</i>
+                                    <i *ngIf="!turno.motivo" class="text-secondary">-</i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--
+                                    <div class="card-body">
                     <div *ngFor="let turno of turnosFiltrados" class="card my-2">
                         <div class="card-header d-flex justify-content-between align-items-center p-3" [ngClass]="{
                             'border-danger': turno.estado==='Rechazado',
@@ -211,7 +293,6 @@
 
                             <div *ngIf="turno.estado==='Aceptado' || turno.estado==='Inactivo'">
 
-                                <!--BOTONES ESPECIALISTA-->
                                 <div *ngIf="usuarioPerfil==='especialista'">
                                     <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-primary m-1"
                                         (click)="aceptarTurno(turno)">
@@ -234,8 +315,6 @@
                                     Cancelar turno
                                 </button>
                             </div>
-
-                            <!--TURNO FINALIZADO-->
                             <div *ngIf="turno.estado==='Finalizado'">
 
                                 <button *ngIf="usuarioPerfil=='especialista'" class="btn btn-warning m-1"
@@ -243,8 +322,6 @@
                                     [disabled]="turno.diagnostico?.observacion===undefined">
                                     Ver diagnóstico
                                 </button>
-
-                                <!--BOTON PACIENTE-->
                                 <button *ngIf="usuarioPerfil=='paciente' && turno.resenia?.comentario===undefined"
                                     class="btn btn-primary m-1" (click)="subirResenia(turno)">
                                     Subir reseña
@@ -261,6 +338,7 @@
                         </div>
                     </div>
                 </div>
+                -->
             </div>
 
             <div *ngIf="turnoAFinalizar" class="card mt-5 w-50 shadow">
@@ -270,13 +348,13 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <form class="row" [formGroup]="historiaClinicaForm"
-                    (ngSubmit)="finalizarTurno(turnoAFinalizar)">
+                    <form class="row" [formGroup]="historiaClinicaForm" (ngSubmit)="finalizarTurno(turnoAFinalizar)">
                         <div class="col-md-6 mt-3">
                             <label for="observacion">Observación</label>
                             <div class="input-group">
                                 <textarea type="text" class="form-control" formControlName="observacion"
-                                    [ngClass]="{'is-invalid': historiaClinicaForm.get('observacion')?.invalid }" rows="5">
+                                    [ngClass]="{'is-invalid': historiaClinicaForm.get('observacion')?.invalid }"
+                                    rows="5">
                                 </textarea>
                             </div>
 
@@ -284,7 +362,8 @@
                                 <label for="tratamiento">Tratamiento</label>
                                 <div class="input-group">
                                     <textarea type="text" class="form-control" formControlName="tratamiento"
-                                        [ngClass]="{'is-invalid': historiaClinicaForm.get('tratamiento')?.invalid }" rows="4">
+                                        [ngClass]="{'is-invalid': historiaClinicaForm.get('tratamiento')?.invalid }"
+                                        rows="4">
                                     </textarea>
                                 </div>
                             </div>
@@ -335,8 +414,8 @@
                             </div>
                         </div>
                         <div class="mt-4">
-                            <button class="btn btn-success w-100"
-                            [disabled]="historiaClinicaForm.invalid" type="submit">
+                            <button class="btn btn-success w-100" [disabled]="historiaClinicaForm.invalid"
+                                type="submit">
                                 Confirmar
                             </button>
                         </div>

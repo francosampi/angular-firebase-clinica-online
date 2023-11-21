@@ -56,8 +56,9 @@ export class TurnosComponent implements OnInit {
     this.filtroForm = this.fb.group({
       paciente: [''],
       especialista: [''],
+      especialidad: [''],
+      fecha: [''],
       estado: [''],
-      especialidad: ['']
     });
 
     this.historiaClinicaForm = this.fb.group({
@@ -225,13 +226,15 @@ export class TurnosComponent implements OnInit {
     const pacienteFiltro = this.filtroForm.value.paciente.toLowerCase();
     const especialistaFiltro = this.filtroForm.value.especialista.toLowerCase();
     const estadoFiltro = this.filtroForm.value.estado.toLowerCase();
+    const fechaFiltro = this.filtroForm.value.fecha;
     const especialidadFiltro = this.filtroForm.value.especialidad.toLowerCase();
 
     this.turnosFiltrados = this.turnos.filter(turno =>
       turno.nombrePaciente.toLowerCase().includes(pacienteFiltro) &&
       turno.nombreEspecialista.toLowerCase().includes(especialistaFiltro) &&
-      turno.estado.toLowerCase().includes(estadoFiltro) &&
-      turno.especialidad.toLowerCase().includes(especialidadFiltro)
+      turno.especialidad.toLowerCase().includes(especialidadFiltro) &&
+      turno.fecha.includes(fechaFiltro) &&
+      turno.estado.toLowerCase().includes(estadoFiltro)
     );
   }
 

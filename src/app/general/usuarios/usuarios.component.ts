@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { ExcelService } from 'src/app/services/excel/excel.service';
 import { UserService } from 'src/app/services/user/user.service';
 import Swal from 'sweetalert2';
 
@@ -15,7 +16,7 @@ export class UsuariosComponent implements OnInit {
   verHistoria: boolean = false;
   spinner: boolean = false;
 
-  constructor(private authService: AuthService, private userService: UserService) { }
+  constructor(private authService: AuthService, private userService: UserService, private excelService: ExcelService) { }
 
   ngOnInit(): void {
 
@@ -36,5 +37,9 @@ export class UsuariosComponent implements OnInit {
     }).finally(() => {
       this.spinner = false;
     });
+  }
+
+  descargarExcel(){
+    this.excelService.generateExcel(this.listaUsuarios, 'usuarios', 'Usuarios');
   }
 }

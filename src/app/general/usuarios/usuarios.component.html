@@ -7,9 +7,15 @@
                     <!--LISTADO DE USUARIOS-->
                     <div *ngIf="!verHistoria">
                         <div class="card-header p-3">
-                            <button class="btn btn-info" (click)="verHistoria=true;">
-                                Ver historia clínica de pacientes
-                            </button>
+                            <div class="mb-2">
+                                <button class="btn btn-info w-50" (click)="verHistoria=true;">
+                                    Ver historia clínica de pacientes
+                                </button>
+                                <button class="btn btn-success w-50" (click)="descargarExcel()">
+                                    Descargar listado de pacientes (.xsl)
+                                </button>
+                            </div>
+
                             <h4 class="text-center mt-3">Listado de usuarios</h4>
                         </div>
                         <div class="lista-scrolleable card-body">
