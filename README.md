@@ -1,6 +1,8 @@
 # Clínica Online - Franco Sampietro
 Esta aplicación web permite gestionar eficientemente los trámites de una clínica desde cualquier lugar a través de la web.
 
+https://github.com/francosampi/angular-firebase-clinica-online/assets/69652610/069dafa0-7aaa-4a9a-aab9-7051c0cf9f4a
+
 ## Usuarios
 ### Pacientes
 Los pacientes tienen la capacidad de solicitar consultas con diversos profesionales, supervisar el estado de sus turnos y dejar reseñas.
