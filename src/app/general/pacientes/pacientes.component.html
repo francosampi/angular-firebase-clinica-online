@@ -9,7 +9,11 @@
                     <button class="btn btn-secondary" (click)="verHistoriaPaciente=false;">
                         Volver a mis pacientes
                     </button>
-                    <h4 class="text-center">Historia clínica de {{verHistoriaPaciente.datos.nombre}} {{verHistoriaPaciente.datos.apellido}}</h4>
+                    <h4 class="text-center">Historia clínica de
+                        <i>
+                            {{verHistoriaPaciente.datos.nombre}} {{verHistoriaPaciente.datos.apellido}}
+                        </i>
+                    </h4>
                 </div>
                 <div *ngIf="usuarioDatos" class="card-body">
                     <div *ngIf="pacientes && !verHistoriaPaciente">

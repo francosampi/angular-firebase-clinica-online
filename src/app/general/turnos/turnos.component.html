@@ -252,7 +252,7 @@
                                         </button>
 
                                         <!--BOTON PACIENTE-->
-                                        <button *ngIf="usuarioPerfil=='paciente' && turno.resenia?.comentario===undefined"
+                                        <button *ngIf="usuarioPerfil=='paciente' && !turno.resenia?.comentario"
                                             class="btn btn-primary btn-sm m-1" (click)="subirResenia(turno)">
                                             Subir reseña
                                         </button>
@@ -272,72 +272,6 @@
                         </tbody>
                     </table>
                 </div>
-                <!--
-                                    <div class="card-body">
-                    <div *ngFor="let turno of turnosFiltrados" class="card my-2">
-                        <div class="card-header d-flex justify-content-between align-items-center p-3" [ngClass]="{
-                            'border-danger': turno.estado==='Rechazado',
-                            'border-secondary': turno.estado==='Cancelado',
-                            'border-info': turno.estado==='Inactivo',
-                            'border-primary': turno.estado==='Aceptado',
-                            'border-success': turno.estado==='Finalizado',
-                        }">
-                            <div [ngClass]="{'text-danger': turno.estado==='Rechazado',
-                                            'text-secondary': turno.estado==='Cancelado'}">
-                                <p><b>Paciente</b>: {{turno.nombrePaciente}}</p>
-                                <p><b>Profesional</b>: {{turno.nombreEspecialista}} - <i>{{turno.especialidad |
-                                        capizalizar}}</i></p>
-                                <b>[{{turno.estado}}]</b> - ({{turno.fecha}})
-                            </div>
-
-                            <div *ngIf="turno.estado==='Aceptado' || turno.estado==='Inactivo'">
-
-                                <div *ngIf="usuarioPerfil==='especialista'">
-                                    <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-primary m-1"
-                                        (click)="aceptarTurno(turno)">
-                                        Aceptar turno
-                                    </button>
-
-                                    <button *ngIf="turno.estado==='Aceptado'" class="btn btn-success m-1"
-                                        (click)="irAFinalizarTurno(turno)">
-                                        Finalizar turno
-                                    </button>
-
-                                    <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-danger m-1"
-                                        (click)="rechazarTurno(turno)">
-                                        Rechazar turno
-                                    </button>
-                                </div>
-
-                                <button *ngIf="turno.estado==='Inactivo'" class="btn btn-secondary m-1"
-                                    (click)="cancelarTurno(turno)">
-                                    Cancelar turno
-                                </button>
-                            </div>
-                            <div *ngIf="turno.estado==='Finalizado'">
-
-                                <button *ngIf="usuarioPerfil=='especialista'" class="btn btn-warning m-1"
-                                    (click)="verDiagnostico(turno)"
-                                    [disabled]="turno.diagnostico?.observacion===undefined">
-                                    Ver diagnóstico
-                                </button>
-                                <button *ngIf="usuarioPerfil=='paciente' && turno.resenia?.comentario===undefined"
-                                    class="btn btn-primary m-1" (click)="subirResenia(turno)">
-                                    Subir reseña
-                                </button>
-
-                                <button class="btn btn-warning m-1" [disabled]="turno.resenia?.comentario==undefined"
-                                    (click)="verResenia(turno)">
-                                    Ver reseña
-                                </button>
-                            </div>
-                            <span *ngIf="turno.motivo">
-                                <b>Motivo: </b><i class="text-secondary">{{turno.motivo}}</i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                -->
             </div>
 
             <div *ngIf="turnoAFinalizar" class="card mt-5 w-50 shadow">
