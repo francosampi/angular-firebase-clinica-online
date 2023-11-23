@@ -15,14 +15,13 @@ import Swal from 'sweetalert2';
 export class UsuariosComponent implements OnInit {
 
   usuarioDatos: any;
-  listaUsuarios: any;
+  listaUsuarios: any[]=[];
   verHistoria: boolean = false;
   spinner: boolean = false;
 
   constructor(private authService: AuthService, private userService: UserService, private excelService: ExcelService) { }
 
   ngOnInit(): void {
-
     this.usuarioDatos = this.authService.usuarioCredenciales;
 
     this.userService.getAllUsers().subscribe((lista) => {
@@ -43,6 +42,21 @@ export class UsuariosComponent implements OnInit {
   }
 
   descargarExcel(){
-    this.excelService.generateExcel(this.listaUsuarios, 'usuarios', 'Usuarios');
+
+    //Corrección orden de datos para excel
+    const usuariosOrdenados = this.listaUsuarios.map(usuario => {
+      return {
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        edad: usuario.edad,
+        mail: usuario.mail,
+        dni: usuario.dni,
+        obraSocial: usuario.obraSocial,
+        especialidad: usuario.especialidad,
+        habilitado: usuario.habilitado
+      };
+    });
+
+    this.excelService.generateExcel(usuariosOrdenados, 'usuarios', 'Usuarios');
   }
 }

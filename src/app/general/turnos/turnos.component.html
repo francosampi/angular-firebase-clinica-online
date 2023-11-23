@@ -224,26 +224,25 @@
                                         <div *ngIf="usuarioPerfil==='especialista'">
                                             <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-primary btn-sm m-1"
                                                 (click)="aceptarTurno(turno)">
-                                                Aceptar turno
+                                                Aceptar
                                             </button>
 
                                             <button *ngIf="turno.estado==='Aceptado'" class="btn btn-success btn-sm m-1"
                                                 (click)="irAFinalizarTurno(turno)">
-                                                Finalizar turno
+                                                Finalizar
                                             </button>
 
                                             <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-danger btn-sm m-1"
                                                 (click)="rechazarTurno(turno)">
-                                                Rechazar turno
+                                                Rechazar
                                             </button>
                                         </div>
 
                                         <button *ngIf="turno.estado==='Inactivo'" class="btn btn-secondary btn-sm m-1"
                                             (click)="cancelarTurno(turno)">
-                                            Cancelar turno
+                                            Cancelar
                                         </button>
                                     </div>
-
 
                                     <div *ngIf="turno.estado==='Finalizado'">
                                         <button *ngIf="usuarioPerfil=='especialista'" class="btn btn-warning btn-sm m-1"
