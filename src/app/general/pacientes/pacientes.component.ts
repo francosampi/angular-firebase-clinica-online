@@ -12,9 +12,9 @@ import Swal from 'sweetalert2';
 })
 export class PacientesComponent implements OnInit {
 
-  especialistaId: string = ''; //Especialista logeado
+  especialistaId: string = ''; //Especialista logeado (actualmente)
   usuarioDatos: any;
-  pacientes: { datos: Paciente, foto: any }[] = [];
+  pacientes: {idPaciente: string, datos: Paciente, foto: any }[] = [];
   verPacientes: boolean = true;
   verHistoriaPaciente: any = undefined;
 
@@ -48,7 +48,7 @@ export class PacientesComponent implements OnInit {
               this.userService.getUserByUid(idPaciente).subscribe((datos) => {
                 if (datos) {
                   this.authService.getUserImagebyUID(idPaciente).subscribe((foto) => {
-                    this.pacientes.push({ datos, foto });
+                    this.pacientes.push({idPaciente, datos, foto });
                   });
                 };
               });

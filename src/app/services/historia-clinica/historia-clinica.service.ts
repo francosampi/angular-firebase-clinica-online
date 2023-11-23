@@ -16,19 +16,24 @@ export class HistoriaClinicaService {
 
   getHistoriaClinica(idPaciente: string | undefined, idEspecialista: string | undefined): Observable<any> {
     let observable = this.firestore
-      .collection('historia-clinica').snapshotChanges();;
+      .collection('historia-clinica', ref => ref
+        .orderBy('fecha', 'desc'))
+      .snapshotChanges();
 
     if (idEspecialista) {
       if (idPaciente) {
         observable = this.firestore
           .collection('historia-clinica', ref => ref
             .where('idEspecialista', '==', idEspecialista)
-            .where('idPaciente', '==', idPaciente)).snapshotChanges();
+            .where('idPaciente', '==', idPaciente)
+            .orderBy('fecha', 'desc'))
+          .snapshotChanges();
       }
       else {
         observable = this.firestore
           .collection('historia-clinica', ref => ref
-            .where('idEspecialista', '==', idEspecialista)).snapshotChanges();
+            .where('idEspecialista', '==', idEspecialista)
+            .orderBy('fecha', 'desc')).snapshotChanges();
       }
     }
     return observable;

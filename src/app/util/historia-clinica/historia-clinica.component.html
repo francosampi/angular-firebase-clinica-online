@@ -1,21 +1,29 @@
-<div *ngFor="let historia of historiaClinica" class="card m-3">
-    <div class="card-header text-center">
-        <h3>{{historia.usuario.nombre}} {{historia.usuario.apellido}}</h3>
+<div *ngIf="historiaClinica" class="d-flex flex-row justify-content-center">
+    <div *ngFor="let historia of historiaClinica" class="card m-3">
+        <div class="card-header text-center">
+            <h3>{{historia.usuario.nombre}} {{historia.usuario.apellido}}</h3>
+        </div>
+        <div class="card-body">
+            <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}
+            <hr>
+            <b>Obra social: </b>{{historia.usuario.obraSocial}}
+            <hr>
+            <b>Altura: </b>{{historia.registro.ficha.altura}} m.
+            <hr>
+            <b>Peso: </b>{{historia.registro.ficha.peso}} kg.
+            <hr>
+            <b>Temperatura: </b>{{historia.registro.ficha.temperatura}} °C
+            <hr>
+            <b>Presión: </b>{{historia.registro.ficha.presion}} mmHg.
+        </div>
+        <div class="card-footer d-flex justify-content-end">
+            <i>{{historia.registro.fecha}}</i>
+        </div>
     </div>
-    <div class="card-body">
-        <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}
-        <hr>
-        <b>Obra social: </b>{{historia.usuario.obraSocial}}
-        <hr>
-        <b>Altura: </b>{{historia.registro.ficha.altura}} m.
-        <hr>
-        <b>Peso: </b>{{historia.registro.ficha.peso}} kg.
-        <hr>
-        <b>Temperatura: </b>{{historia.registro.ficha.temperatura}} °C
-        <hr>
-        <b>Presión: </b>{{historia.registro.ficha.presion}} mmHg.
-    </div>
-    <div class="card-footer d-flex justify-content-end">
-        <i>{{historia.registro.fecha}}</i>
+</div>
+
+<div *ngIf="historiaClinica.length===0">
+    <div class="card-body fw-bold text-danger">
+        No se encuentra historia clínica del paciente seleccionado.
     </div>
 </div>

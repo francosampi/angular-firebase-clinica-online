@@ -13,10 +13,10 @@ export class TurnosService {
     return this.firestore.collection('turnos').add(turno);
   }
 
-  getTurnos(){
+  getTurnos() {
     return this.firestore.collection('turnos', ref => ref
-    .orderBy('fecha', 'desc')
-  ).snapshotChanges();
+      .orderBy('fecha', 'desc')
+    ).snapshotChanges();
   }
 
   getTurnosByUsuarioId(id: string) {
