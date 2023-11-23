@@ -57,7 +57,7 @@
     </div>
 
     <!--HISTORIA CLÍNICA-->
-    <div *ngIf="verHistoria">
+    <div [@slideInAnimation] *ngIf="verHistoria">
         <div class="card m-4">
             <div class="card-header">
                 <button class="btn btn-secondary" (click)="verHistoria=false;">

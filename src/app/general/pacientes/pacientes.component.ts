@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { delayedFadeAnimation } from 'src/app/animations/fade';
+import { slideInAnimation } from 'src/app/animations/slideIn';
 import { Paciente } from 'src/app/interfaces/perfiles';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
@@ -8,7 +10,8 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-pacientes',
   templateUrl: './pacientes.component.html',
-  styleUrls: ['./pacientes.component.css', '../../styles/contenedor-fondo.css']
+  styleUrls: ['./pacientes.component.css', '../../styles/contenedor-fondo.css'],
+  animations: [delayedFadeAnimation, slideInAnimation]
 })
 export class PacientesComponent implements OnInit {
 
@@ -37,8 +40,13 @@ export class PacientesComponent implements OnInit {
           const pacientesSet = new Set<string>();
 
           turnos.forEach((turno: any) => {
-            const idPaciente = turno.payload.doc.data().idPaciente;
-            pacientesSet.add(idPaciente);
+            const datosTurno = turno.payload.doc.data();
+            const idPaciente = datosTurno.idPaciente;
+
+            if(datosTurno.estado === 'Activo' || datosTurno.estado === 'Finalizado')
+            {
+              pacientesSet.add(idPaciente);
+            }
           });
 
           Array.from(pacientesSet).forEach((idPaciente) => {
