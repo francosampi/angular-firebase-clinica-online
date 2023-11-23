@@ -1,4 +1,4 @@
-<div class="contenedor-fondo">
+<div [@slideInAnimation] class="contenedor-fondo">
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-8">
@@ -12,10 +12,9 @@
                                     Ver historia clínica de pacientes
                                 </button>
                                 <button class="btn btn-success w-50" (click)="descargarExcel()">
-                                    Descargar listado de pacientes (.xsl)
+                                    Descargar listado de usuarios (.xsl)
                                 </button>
                             </div>
-
                             <h4 class="text-center mt-3">Listado de usuarios</h4>
                         </div>
                         <div class="lista-scrolleable card-body">
@@ -57,7 +56,7 @@
                             <h4 class="text-center mt-3">Historia clínica de clientes</h4>
                         </div>
                         <div class="card-body">
-                            <app-historia-clinica />
+                            <app-historia-clinica [usuarioObj]="{usuarioId: undefined, especialistaId: undefined}" />
                         </div>
                     </div>
                 </div>

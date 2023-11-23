@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HistoriaClinicaService } from 'src/app/services/historia-clinica/historia-clinica.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-historia-clinica',
@@ -9,20 +10,17 @@ import { HistoriaClinicaService } from 'src/app/services/historia-clinica/histor
 export class HistoriaClinicaComponent implements OnInit {
 
   @Input() usuarioObj?: { usuarioId?: string; especialistaId?: string; };
-  historiaClinica: any[]=[];
+  historiaClinica: {usuario?: any, registro?: any}[] = [];
 
-  constructor(private historiaClinicaService: HistoriaClinicaService){}
+  constructor(private historiaClinicaService: HistoriaClinicaService, private userService: UserService) { }
 
   ngOnInit(): void {
-    console.log(this.usuarioObj);
-
-    if(this.usuarioObj?.especialistaId)
-    {
-      this.historiaClinicaService.getHistoriaClinica(this.usuarioObj?.usuarioId, this.usuarioObj?.especialistaId).subscribe((lista)=>{
-        lista.map((registro: any)=>{
-          this.historiaClinica.push(registro.payload.doc.data());
+    this.historiaClinicaService.getHistoriaClinica(this.usuarioObj?.usuarioId, this.usuarioObj?.especialistaId).subscribe((lista) => {
+      lista.map((registro: any) => {
+        this.userService.getUserByUid(registro.payload.doc.data().idPaciente).subscribe((user)=>{
+          this.historiaClinica.push({usuario: user, registro: registro.payload.doc.data()});
         });
       });
-    }
+    });
   }
 }

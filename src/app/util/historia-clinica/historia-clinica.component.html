@@ -1,13 +1,21 @@
-<div class="card">
-    <div *ngFor="let registro of historiaClinica" class="card-body">
-        {{registro.fecha}}
+<div *ngFor="let historia of historiaClinica" class="card m-3">
+    <div class="card-header text-center">
+        <h3>{{historia.usuario.nombre}} {{historia.usuario.apellido}}</h3>
+    </div>
+    <div class="card-body">
+        <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}
         <hr>
-        <b>Altura: </b>{{registro.ficha.altura}} metros.
+        <b>Obra social: </b>{{historia.usuario.obraSocial}}
         <hr>
-        <b>Peso: </b>{{registro.ficha.peso}} kg.
+        <b>Altura: </b>{{historia.registro.ficha.altura}} m.
         <hr>
-        <b>Temperatura: </b>{{registro.ficha.temperatura}} °C
+        <b>Peso: </b>{{historia.registro.ficha.peso}} kg.
         <hr>
-        <b>Presión: </b>{{registro.ficha.presion}} mm Hg
+        <b>Temperatura: </b>{{historia.registro.ficha.temperatura}} °C
+        <hr>
+        <b>Presión: </b>{{historia.registro.ficha.presion}} mmHg.
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+        <i>{{historia.registro.fecha}}</i>
     </div>
 </div>

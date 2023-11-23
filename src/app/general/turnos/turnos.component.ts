@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, forkJoin, map, of, switchMap } from 'rxjs';
+import { delayedFadeAnimation } from 'src/app/animations/fade';
+import { slideInAnimation } from 'src/app/animations/slideIn';
 import { Especialidad } from 'src/app/interfaces/especialidad';
 import { Historiaclinica } from 'src/app/interfaces/historia-clinica';
 import { Especialista } from 'src/app/interfaces/perfiles';
@@ -15,7 +17,8 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-turnos',
   templateUrl: './turnos.component.html',
-  styleUrls: ['./turnos.component.css', '../../styles/contenedor-fondo.css']
+  styleUrls: ['./turnos.component.css', '../../styles/contenedor-fondo.css'],
+  animations: [delayedFadeAnimation, slideInAnimation]
 })
 export class TurnosComponent implements OnInit {
 

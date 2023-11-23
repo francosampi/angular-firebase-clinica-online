@@ -16,6 +16,7 @@ import { NavbarModule } from './general/navbar/navbar.module';
 import { FooterModule } from './general/footer/footer.module';
 import { CapitalizacionDirective } from './directives/capitalizacion.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -29,10 +30,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NavbarModule,
     FooterModule,
     AngularFireAuthModule,
+    NgbModule,
+    BrowserAnimationsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    NgbModule,
   ],
   providers: [
     {provide: FIREBASE_OPTIONS, useValue: environment.firebase}

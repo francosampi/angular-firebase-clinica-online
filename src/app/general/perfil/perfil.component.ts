@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { delayedFadeAnimation } from 'src/app/animations/fade';
+import { slideInAnimation } from 'src/app/animations/slideIn';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EspecialistaService } from 'src/app/services/especialista/especialista.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -9,7 +11,8 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
-  styleUrls: ['./perfil.component.css', '../../styles/contenedor-fondo.css']
+  styleUrls: ['./perfil.component.css', '../../styles/contenedor-fondo.css'],
+  animations: [delayedFadeAnimation, slideInAnimation]
 })
 export class PerfilComponent implements OnInit {
 

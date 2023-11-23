@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { delayedFadeAnimation } from 'src/app/animations/fade';
+import { slideInAnimation } from 'src/app/animations/slideIn';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ExcelService } from 'src/app/services/excel/excel.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -7,7 +9,8 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
-  styleUrls: ['./usuarios.component.css', '../../styles/contenedor-fondo.css']
+  styleUrls: ['./usuarios.component.css', '../../styles/contenedor-fondo.css'],
+  animations: [delayedFadeAnimation, slideInAnimation]
 })
 export class UsuariosComponent implements OnInit {
 

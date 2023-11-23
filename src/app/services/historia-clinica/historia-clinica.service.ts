@@ -15,7 +15,8 @@ export class HistoriaClinicaService {
   }
 
   getHistoriaClinica(idPaciente: string | undefined, idEspecialista: string | undefined): Observable<any> {
-    let observable;
+    let observable = this.firestore
+      .collection('historia-clinica').snapshotChanges();;
 
     if (idEspecialista) {
       if (idPaciente) {
@@ -30,7 +31,6 @@ export class HistoriaClinicaService {
             .where('idEspecialista', '==', idEspecialista)).snapshotChanges();
       }
     }
-    return this.firestore
-      .collection('historia-clinica').snapshotChanges();
+    return observable;
   }
 }

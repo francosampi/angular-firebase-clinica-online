@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { slideInAnimation } from 'src/app/animations/slideIn';
+import { delayedFadeAnimation } from 'src/app/animations/fade';
 
 @UntilDestroy()
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css', '../../styles/contenedor-fondo.css']
+  styleUrls: ['./home.component.css', '../../styles/contenedor-fondo.css'],
+  animations: [delayedFadeAnimation, slideInAnimation]
 })
 export class HomeComponent implements OnInit{
 

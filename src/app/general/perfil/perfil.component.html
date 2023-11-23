@@ -1,7 +1,7 @@
 <div class="contenedor-fondo">
 
     <!--MI PERFIL-->
-    <div *ngIf="!verHistoria" class="container d-flex justify-content-center">
+    <div [@slideInAnimation] *ngIf="!verHistoria" class="container d-flex justify-content-center">
         <div *ngIf="usuarioDatos" class="card mt-5 w-50 shadow">
             <div class="card-header text-center p-3">
                 <h4>Mi cuenta</h4>
