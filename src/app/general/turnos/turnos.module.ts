@@ -15,10 +15,9 @@ import { CapizalizarPipe } from '../../pipes/capitalizar/capizalizar.pipe';
   imports: [
     CommonModule,
     TurnosRoutingModule,
-    FormsModule,
     SpinnerModule,
+    ReactiveFormsModule,
     FormsModule,
-    ReactiveFormsModule
   ],
   exports: [
     TurnosComponent

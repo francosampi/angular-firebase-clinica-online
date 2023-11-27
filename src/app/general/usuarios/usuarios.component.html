@@ -7,41 +7,49 @@
                     <!--LISTADO DE USUARIOS-->
                     <div *ngIf="!verHistoria">
                         <div class="card-header p-3">
-                            <div class="mb-2">
-                                <button class="btn btn-info w-50" (click)="verHistoria=true;">
-                                    Ver historia clínica de pacientes
-                                </button>
-                                <button class="btn btn-success w-50" (click)="descargarExcel()">
-                                    Descargar listado de usuarios (.xsl)
-                                </button>
-                            </div>
                             <h4 class="text-center mt-3">Listado de usuarios</h4>
                         </div>
                         <div class="lista-scrolleable card-body">
                             <div *ngFor="let usuario of listaUsuarios"
-                                class="card p-2 mx-2 my-3 justify-content-center shadow-sm">
-                                <div class="card-body align-items-center">
-                                    <p>Usuario: <b>{{usuario.mail}}</b></p>
-                                    <hr>
-                                    <p>Perfil: <b>{{usuario.perfil}}</b></p>
-                                    <p *ngIf="usuario.especialidad">Especialidad: <b>{{usuario.especialidad}}</b></p>
+                                class="d-flex align-items-center justify-content-between">
+                                <div class="btn btn-light card p-2 mx-2 my-3 shadow-sm col-md-9"
+                                    (click)="descargarExcelIndividual(usuario)">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div class="d-flex flex-row justify-content-start">
+                                            <b>{{usuario.mail}}</b>
+                                        </div>
 
-                                    <div *ngIf="usuario.habilitado===true" class="d-flex row align-items-center">
-                                        <p class="col-md-8">
-                                            Estado: <b style="color: forestgreen">HABILITADO</b>
-                                        </p>
-                                        <button class="col-md-4 btn btn-secondary w-25"
-                                            (click)="habilitarUsuario(usuario.mail, false)">DESHABILITAR</button>
-                                    </div>
+                                        <div class="d-flex align-items-center justify-content-start">
+                                            <div *ngIf="usuario.habilitado===true" class="d-flex align-items-center">
+                                                <span>
+                                                    Estado: <b style="color: forestgreen">HABILITADO</b>
+                                                </span>
+                                            </div>
 
-                                    <div *ngIf="usuario.habilitado===false" class="d-flex row align-items-center">
-                                        <p class="col-md-8">
-                                            Estado: <b style="color: crimson">SIN HABILITAR</b>
-                                        </p>
-                                        <button class="col-md-4 btn btn-secondary w-25"
-                                            (click)="habilitarUsuario(usuario.mail, true)">HABILITAR</button>
+                                            <div *ngIf="usuario.habilitado===false" class="d-flex align-items-center">
+                                                <span>
+                                                    Estado: <b style="color: crimson">SIN HABILITAR</b>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <button *ngIf="usuario.habilitado===true" class="btn btn-secondary m-2"
+                                        (click)="habilitarUsuario(usuario.mail, false)">DESHABILITAR</button>
+                                    <button *ngIf="usuario.habilitado===false" class="btn btn-secondary m-2"
+                                        (click)="habilitarUsuario(usuario.mail, true)">HABILITAR</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-center">
+                            <div class="mb-2">
+                                <button class="btn btn-info m-2" (click)="verHistoria=true;">
+                                    Ver historia clínica de pacientes
+                                </button>
+                                <button class="btn btn-success m-2" (click)="descargarExcelListado()">
+                                    Descargar listado de usuarios (.xsl)
+                                </button>
                             </div>
                         </div>
                     </div>

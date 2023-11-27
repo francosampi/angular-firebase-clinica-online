@@ -33,6 +33,14 @@ export class TurnosService {
     ).snapshotChanges();
   }
 
+  getTurnosByEspecialistaPacienteIds(idPaciente: string, idEspecialista: string){
+    return this.firestore.collection('turnos', ref => ref
+      .where('idEspecialista', '==', idEspecialista)
+      .where('idPaciente', '==', idPaciente)
+      .orderBy('fecha', 'desc')
+    ).snapshotChanges();
+  }
+
   updateTurnoById(id: string, estado: string, motivoTxt: string, diagnosticoTxt: Diagnostico = {}): Promise<void> {
     return new Promise((res, rej) => {
       this.firestore.collection('turnos').doc(id).update({ estado: estado, motivo: motivoTxt, diagnostico: diagnosticoTxt }).then(() => {

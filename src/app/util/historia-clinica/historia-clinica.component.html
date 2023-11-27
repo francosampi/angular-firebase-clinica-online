@@ -1,20 +1,31 @@
-<div *ngIf="historiaClinica" class="d-flex flex-row justify-content-center">
+<div *ngIf="historiaClinica" class="d-flex flex-row flex-wrap justify-content-center">
     <div *ngFor="let historia of historiaClinica" class="card m-3">
         <div class="card-header text-center">
             <h3>{{historia.usuario.nombre}} {{historia.usuario.apellido}}</h3>
         </div>
         <div class="card-body">
-            <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}
+            <p>
+                <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}
+            </p>
+            <p>
+                <b>Obra social: </b>{{historia.usuario.obraSocial}}
+            </p>
+            <p>
+                <b>Altura: </b>{{historia.registro.ficha.altura}} m.
+            </p>
+            <p>
+                <b>Peso: </b>{{historia.registro.ficha.peso}} kg.
+            </p>
+            <p>
+                <b>Temperatura: </b>{{historia.registro.ficha.temperatura}} °C
+            </p>
+            <p>
+                <b>Presión: </b>{{historia.registro.ficha.presion}} mmHg.
+            </p>
             <hr>
-            <b>Obra social: </b>{{historia.usuario.obraSocial}}
-            <hr>
-            <b>Altura: </b>{{historia.registro.ficha.altura}} m.
-            <hr>
-            <b>Peso: </b>{{historia.registro.ficha.peso}} kg.
-            <hr>
-            <b>Temperatura: </b>{{historia.registro.ficha.temperatura}} °C
-            <hr>
-            <b>Presión: </b>{{historia.registro.ficha.presion}} mmHg.
+            <div *ngFor="let adicional of historia.registro.ficha.adicionales | keyvalue">
+                <b>{{ adicional.key }}:</b> {{ adicional.value }}
+            </div>
         </div>
         <div class="card-footer d-flex justify-content-end">
             <i>{{historia.registro.fecha}}</i>

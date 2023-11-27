@@ -176,20 +176,8 @@
                         Atrás
                     </button>
                     <form [formGroup]="filtroForm" class="d-flex flex-row justify-content-between mt-3">
-                        <input class="form-control" type="text" formControlName="paciente"
-                            placeholder="Filtrar por paciente" (input)="filtrarTurnos()">
-
-                        <input class="form-control" type="text" formControlName="especialista"
-                            placeholder="Filtrar por profesional" (input)="filtrarTurnos()">
-
-                        <input class="form-control" type="text" formControlName="especialidad"
-                            placeholder="Filtrar por especialidad" (input)="filtrarTurnos()">
-
-                        <input class="form-control" type="text" formControlName="fecha"
-                            placeholder="Filtrar por fecha" (input)="filtrarTurnos()">
-
-                        <input class="form-control" type="text" formControlName="estado"
-                            placeholder="Filtrar por estado" (input)="filtrarTurnos()">
+                        <input class="form-control" type="text" formControlName="filtro" placeholder="Filtrar"
+                            (input)="filtrarTurnos()">
                     </form>
                 </div>
                 <div class="card-body">
@@ -209,7 +197,7 @@
                             <tr *ngFor="let turno of turnosFiltrados" [ngClass]="{
                                 'table-danger': turno.estado==='Rechazado',
                                 'table-secondary': turno.estado==='Cancelado',
-                                'table-light': turno.estado==='Inactivo',
+                                'table-light': turno.estado==='Pendiente',
                                 'table-primary': turno.estado==='Aceptado',
                                 'table-success': turno.estado==='Finalizado',
                             }">
@@ -220,7 +208,7 @@
                                 <td><b>{{turno.estado}}</b></td>
 
                                 <td>
-                                    <div *ngIf="turno.estado==='Aceptado' || turno.estado==='Inactivo'">
+                                    <div *ngIf="turno.estado==='Aceptado' || turno.estado==='Pendiente'">
                                         <div *ngIf="usuarioPerfil==='especialista'">
                                             <button *ngIf="turno.estado!=='Aceptado'" class="btn btn-primary btn-sm m-1"
                                                 (click)="aceptarTurno(turno)">
@@ -238,7 +226,7 @@
                                             </button>
                                         </div>
 
-                                        <button *ngIf="turno.estado==='Inactivo'" class="btn btn-secondary btn-sm m-1"
+                                        <button *ngIf="turno.estado==='Pendiente'" class="btn btn-secondary btn-sm m-1"
                                             (click)="cancelarTurno(turno)">
                                             Cancelar
                                         </button>
@@ -281,8 +269,11 @@
                     </button>
                 </div>
                 <div class="card-body">
+                    <p>
+                        <i class="text-muted">Completar historia clínica</i>
+                    </p>
                     <form class="row" [formGroup]="historiaClinicaForm" (ngSubmit)="finalizarTurno(turnoAFinalizar)">
-                        <div class="col-md-6 mt-3">
+                        <div class="col-md-6 mt-2">
                             <label for="observacion">Observación</label>
                             <div class="input-group">
                                 <textarea type="text" class="form-control" formControlName="observacion"
@@ -346,6 +337,25 @@
                                 </div>
                             </div>
                         </div>
+                        <div formArrayName="camposAdicionalesHistoriaClinica" class="mt-3">
+                            <p>
+                                <i class="text-muted">Agregar campos dinámicos</i>
+                            </p>
+                            <button type="button" class="btn btn-primary btn-sm mx-1"
+                                (click)="agregarCampoHistoriaClinica()">+</button>
+
+                            <div *ngFor="let campo of camposAdicionalesHistoriaClinica.controls; let i = index">
+                                <div [formGroup]="getCampoFormGroup(i)" class="d-flex flex-row form-group mt-2">
+                                    <input type="text" class="form-control w-30" formControlName="clave"
+                                        placeholder="Clave">
+                                    <input type="text" class="form-control w-30" formControlName="valor"
+                                        placeholder="Valor">
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                        (click)="eliminarCampoHistoriaClinica(i)">-</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mt-4">
                             <button class="btn btn-success w-100" [disabled]="historiaClinicaForm.invalid"
                                 type="submit">

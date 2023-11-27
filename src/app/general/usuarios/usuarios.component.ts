@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 export class UsuariosComponent implements OnInit {
 
   usuarioDatos: any;
-  listaUsuarios: any[]=[];
+  listaUsuarios: any[] = [];
   verHistoria: boolean = false;
   spinner: boolean = false;
 
@@ -41,7 +41,33 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
-  descargarExcel(){
+  descargarExcelIndividual(usuario: any) {
+    Swal.fire({
+      title: "¿Descargar archivo .xslx?",
+      html: "Descargar datos de <b>"+usuario.mail+"</b>",
+      showCancelButton: true,
+      confirmButtonText: "Descargar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const usuarioOrdenado = {
+          nombre: usuario.nombre,
+          apellido: usuario.apellido,
+          edad: usuario.edad,
+          mail: usuario.mail,
+          dni: usuario.dni,
+          obraSocial: usuario.obraSocial,
+          especialidad: usuario.especialidad,
+          habilitado: usuario.habilitado
+        };
+    
+        this.excelService.generateExcel([usuarioOrdenado], 'usuario_' + usuario.mail, 'Usuarios');
+        Swal.fire("Excel descargado", "", "success");
+      }
+    });
+  }
+
+  descargarExcelListado() {
 
     //Corrección orden de datos para excel
     const usuariosOrdenados = this.listaUsuarios.map(usuario => {

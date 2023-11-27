@@ -47,7 +47,6 @@ export class NavbarComponent implements OnInit {
 
     this.authService.cerrarSesion().then(() => {
       this.route.navigate(['login']);
-      Swal.fire('¡Adios!', 'Has cerrado sesión exitosamente', 'success');
     }).catch(() => {
       Swal.fire('¡Ups!', 'Ha ocurrido un error al cerrar sesión', 'error');
     }).finally(() => {

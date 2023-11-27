@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { delayedFadeAnimation } from 'src/app/animations/fade';
 import { slideInAnimation } from 'src/app/animations/slideIn';
 import { Paciente } from 'src/app/interfaces/perfiles';
+import { Turno } from 'src/app/interfaces/turno';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -17,9 +18,10 @@ export class PacientesComponent implements OnInit {
 
   especialistaId: string = ''; //Especialista logeado (actualmente)
   usuarioDatos: any;
-  pacientes: {idPaciente: string, datos: Paciente, foto: any }[] = [];
+  pacientes: { idPaciente: string, datos: Paciente, turnosPaciente: any, foto: any }[] = [];
   verPacientes: boolean = true;
   verHistoriaPaciente: any = undefined;
+  verTurnosPaciente: any = undefined;
 
   constructor(private authService: AuthService, private userService: UserService, private turnosService: TurnosService) { }
 
@@ -41,26 +43,38 @@ export class PacientesComponent implements OnInit {
 
           turnos.forEach((turno: any) => {
             const datosTurno = turno.payload.doc.data();
-            const idPaciente = datosTurno.idPaciente;
+            const id = datosTurno.idPaciente;
 
-            if(datosTurno.estado === 'Activo' || datosTurno.estado === 'Finalizado')
-            {
-              pacientesSet.add(idPaciente);
+            if (datosTurno.estado === 'Activo' || datosTurno.estado === 'Finalizado') {
+              pacientesSet.add(id);
             }
           });
 
-          Array.from(pacientesSet).forEach((idPaciente) => {
+          Array.from(pacientesSet).forEach(id => {
+            const idPaciente = id;
+            const turnosPaciente: any[] = [];
+
             const pacienteExistente = this.pacientes.find((pac) => pac.datos.id === idPaciente);
 
             if (!pacienteExistente) {
               this.userService.getUserByUid(idPaciente).subscribe((datos) => {
                 if (datos) {
                   this.authService.getUserImagebyUID(idPaciente).subscribe((foto) => {
-                    this.pacientes.push({idPaciente, datos, foto });
+                    if (foto) {
+                      turnos.forEach((elemento: { payload: { doc: { data: () => any; }; }; }) => {
+                        const datosTurnoPaciente = elemento.payload.doc.data();
+                        if (datosTurnoPaciente.idPaciente === idPaciente) {
+                          turnosPaciente.push(datosTurnoPaciente);
+                        };
+                      });
+
+                      const pacienteRegistro = { idPaciente, datos, turnosPaciente, foto };
+                      this.pacientes.push(pacienteRegistro);
+                    };
                   });
                 };
               });
-            }
+            };
           });
         });
       }
@@ -74,6 +88,16 @@ export class PacientesComponent implements OnInit {
       '<hr><p>Mail: <b>' + paciente.mail + '</b></p>' +
       '<hr><p>DNI: <b>' + paciente.dni + '</b></p>' +
       '<hr><p>Obra social: <b>' + paciente.obraSocial + '</b></p>',
-      'info');
+      'info'
+    );
+  }
+
+  verReseniaPaciente(turno: Turno) {
+    Swal.fire({
+      title: 'Reseña del paciente (consulta del ' + turno.fecha + ')',
+      html: '<div class="text-left">' +
+        '<b>Reseña: </b>' + turno.resenia?.comentario + '<br><br>' +
+        '<b>Fecha de la reseña: </b>' + turno.resenia?.fecha + '</div>',
+    });
   }
 }

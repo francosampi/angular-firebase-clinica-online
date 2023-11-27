@@ -54,9 +54,8 @@ export class LoginComponent implements OnInit {
 
     this.authService.iniciarSesion(this.form.value.email, this.form.value.password).then(() => {
       this.router.navigate(['']);
-      Swal.fire('¡Bienvenido!', 'Has iniciado sesión correctamente', 'success');
     }).catch((err) => {
-      Swal.fire('¡Ups!', 'Ha ocurrido un error al iniciar sesión', 'error');
+      Swal.fire('¡Ups!', 'Las credenciales son incorrectas.', 'error');
       console.log(err);
     }).finally(() => {
       this.spinner = false;

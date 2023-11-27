@@ -5,11 +5,10 @@ export interface Historiaclinica {
     especialidad: string;
     fecha: string;
     ficha: {
-        altura: number;
-        peso: number;
-        temperatura: number;
-        presion: number;
-    };
-    adicionales?: {
-    };
+        altura: number,
+        peso: number,
+        temperatura: number,
+        presion: number
+        adicionales: Record<string, any>;
+    }
 }
