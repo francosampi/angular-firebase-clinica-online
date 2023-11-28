@@ -13,20 +13,20 @@
                             <div *ngFor="let usuario of listaUsuarios"
                                 class="d-flex align-items-center justify-content-center">
                                 <div class="btn btn-light card p-2 mx-2 my-3 shadow-sm w-75"
-                                    (click)="descargarExcelIndividual(usuario)">
+                                    (click)="descargarArchivoIndividual(usuario)">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div class="d-flex flex-row justify-content-start">
-                                            <b>{{usuario.mail}}</b>
+                                            <b>{{usuario.userData.mail}}</b>
                                         </div>
 
                                         <div class="d-flex align-items-center justify-content-start">
-                                            <div *ngIf="usuario.habilitado===true" class="d-flex align-items-center">
+                                            <div *ngIf="usuario.userData.habilitado===true" class="d-flex align-items-center">
                                                 <span>
                                                     Estado: <b style="color: forestgreen">HABILITADO</b>
                                                 </span>
                                             </div>
 
-                                            <div *ngIf="usuario.habilitado===false" class="d-flex align-items-center">
+                                            <div *ngIf="usuario.userData.habilitado===false" class="d-flex align-items-center">
                                                 <span>
                                                     Estado: <b style="color: crimson">SIN HABILITAR</b>
                                                 </span>
@@ -35,10 +35,10 @@
                                     </div>
                                 </div>
                                 <div class="justify-content-center w-50">
-                                    <button *ngIf="usuario.habilitado===true" class="btn btn-secondary m-2 w-50"
-                                        (click)="habilitarUsuario(usuario.mail, false)">DESHABILITAR</button>
-                                    <button *ngIf="usuario.habilitado===false" class="btn btn-secondary m-2 w-50"
-                                        (click)="habilitarUsuario(usuario.mail, true)">HABILITAR</button>
+                                    <button *ngIf="usuario.userData.habilitado===true" class="btn btn-secondary m-2 w-50"
+                                        (click)="habilitarUsuario(usuario.userData.mail, false)">DESHABILITAR</button>
+                                    <button *ngIf="usuario.userData.habilitado===false" class="btn btn-secondary m-2 w-50"
+                                        (click)="habilitarUsuario(usuario.userData.mail, true)">HABILITAR</button>
                                 </div>
                             </div>
                         </div>

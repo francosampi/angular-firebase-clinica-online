@@ -3,6 +3,8 @@ import { delayedFadeAnimation } from 'src/app/animations/fade';
 import { slideInAnimation } from 'src/app/animations/slideIn';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ExcelService } from 'src/app/services/excel/excel.service';
+import { PdfService } from 'src/app/services/pdf/pdf.service';
+import { TurnosService } from 'src/app/services/turnos/turnos.service';
 import { UserService } from 'src/app/services/user/user.service';
 import Swal from 'sweetalert2';
 
@@ -15,17 +17,52 @@ import Swal from 'sweetalert2';
 export class UsuariosComponent implements OnInit {
 
   usuarioDatos: any;
-  listaUsuarios: any[] = [];
+  listaUsuarios: { id: string, userData: any, turnosUser: any }[] = [];
   verHistoria: boolean = false;
   spinner: boolean = false;
 
-  constructor(private authService: AuthService, private userService: UserService, private excelService: ExcelService) { }
+  constructor(private authService: AuthService, private userService: UserService, private turnosService: TurnosService,
+    private excelService: ExcelService, private pdfService: PdfService) { }
 
   ngOnInit(): void {
     this.usuarioDatos = this.authService.usuarioCredenciales;
 
+    /*
     this.userService.getAllUsers().subscribe((lista) => {
       this.listaUsuarios = lista;
+    });
+    */
+
+    this.userService.getAllUsersWithId().subscribe((lista) => {
+      lista.forEach((user: { payload: { doc: { id: any; data: () => any; }; }; }) => {
+        const id = user.payload.doc.id;
+        const userData = user.payload.doc.data();
+        const turnosUser: any[] = [];
+
+        this.turnosService.getTurnosByUsuarioId(id).subscribe(turnos => {
+          turnos.forEach(turno => {
+
+            let nombreEspecialista: string = '';
+            const data: any = turno.payload.doc.data();
+            const turnoInfo = {
+              fecha: data.fecha,
+              especialidad: data.especialidad,
+              estado: data.estado
+            };
+
+            this.userService.getUserByUid(data.idEspecialista).subscribe((especialista) => {
+              nombreEspecialista = especialista.nombre + ' ' + especialista.apellido;
+
+              turnosUser.push({
+                nombreEspecialista: nombreEspecialista,
+                ...turnoInfo
+              });
+            });
+          });
+
+          this.listaUsuarios.push({ id, userData, turnosUser });
+        });
+      });
     });
   }
 
@@ -41,45 +78,57 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
-  descargarExcelIndividual(usuario: any) {
+  descargarArchivoIndividual(usuario: any) {
     Swal.fire({
-      title: "¿Descargar archivo .xslx?",
-      html: "Descargar datos de <b>" + usuario.mail + "</b>",
+      title: "Archivo de usuario",
+      html: "Descargar información de <b>" + usuario.userData.mail + "</b>",
       showCancelButton: true,
-      confirmButtonText: "Descargar",
+      showDenyButton: true,
+      denyButtonColor: '#4ED280',
+      confirmButtonText: "Descargar datos (.xsl)",
+      denyButtonText: "Descargar turnos (.xsl)",
       cancelButtonText: "Cancelar",
     }).then((result) => {
-      if (result.isConfirmed) {
-        const usuarioOrdenado = {
-          nombre: usuario.nombre,
-          apellido: usuario.apellido,
-          edad: usuario.edad,
-          mail: usuario.mail,
-          dni: usuario.dni,
-          obraSocial: usuario.obraSocial,
-          especialidad: usuario.especialidad,
-          habilitado: usuario.habilitado
-        };
 
-        this.excelService.generateExcel([usuarioOrdenado], 'usuario_' + usuario.mail, 'Usuarios');
-        Swal.fire("Excel descargado", "", "success");
+      try {
+        if (result.isConfirmed) {
+          const usuarioOrdenado = {
+            nombre: usuario.userData.nombre,
+            apellido: usuario.userData.apellido,
+            edad: usuario.userData.edad,
+            mail: usuario.userData.mail,
+            dni: usuario.userData.dni,
+            obraSocial: usuario.userData.obraSocial,
+            especialidad: usuario.userData.especialidad,
+            habilitado: usuario.userData.habilitado
+          };
+
+          this.excelService.generateExcel([usuarioOrdenado], 'datos_' + usuario.userData.mail, 'Usuario');
+          Swal.fire("Excel descargado", "", "success");
+        }
+
+        if (result.isDenied) {
+          this.excelService.generateExcel(usuario.turnosUser, 'turnos_' + usuario.userData.mail, 'Turnos');
+          Swal.fire("Excel descargado", "", "success");
+        }
+      } catch (error) {
+        Swal.fire("¡Ups!", "Error al descargar archivos...", 'error');
       }
     });
   }
 
   descargarExcelListado() {
-
     //Corrección orden de datos para excel
     const usuariosOrdenados = this.listaUsuarios.map(usuario => {
       return {
-        nombre: usuario.nombre,
-        apellido: usuario.apellido,
-        edad: usuario.edad,
-        mail: usuario.mail,
-        dni: usuario.dni,
-        obraSocial: usuario.obraSocial,
-        especialidad: usuario.especialidad,
-        habilitado: usuario.habilitado
+        nombre: usuario.userData.nombre,
+        apellido: usuario.userData.apellido,
+        edad: usuario.userData.edad,
+        mail: usuario.userData.mail,
+        dni: usuario.userData.dni,
+        obraSocial: usuario.userData.obraSocial,
+        especialidad: usuario.userData.especialidad,
+        habilitado: usuario.userData.habilitado
       };
     });
 
