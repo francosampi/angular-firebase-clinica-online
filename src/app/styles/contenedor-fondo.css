@@ -3,8 +3,8 @@
     margin: 0;
     background-size: cover;
     background-position: center;
-    background-repeat: repeat-y;
+    background-repeat: repeat;
     position: absolute;
     width: 100%;
-    height: calc(100% - 50px);;
+    height: 100%;
 }

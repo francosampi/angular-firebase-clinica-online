@@ -24,17 +24,15 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getCurrentUser().pipe(untilDestroyed(this)).subscribe((user) => {
+      this.usuarioLogeado = user;
+
       if (user) {
-        this.usuarioLogeado = user;
-
         this.userService.getUserByUid(user.uid).pipe(untilDestroyed(this)).subscribe((cred) => {
-          if (cred) {
-            this.usuarioCredenciales = cred;
+          this.usuarioCredenciales = cred;
 
+          if (cred) {
             this.authService.getUserImagebyUID(user.uid).pipe(untilDestroyed(this)).subscribe((foto) => {
-              if (foto) {
-                this.usuarioFoto = foto;
-              }
+              this.usuarioFoto = foto;
             });
           }
         });
@@ -47,6 +45,7 @@ export class NavbarComponent implements OnInit {
 
     this.authService.cerrarSesion().then(() => {
       this.route.navigate(['login']);
+      
     }).catch(() => {
       Swal.fire('¡Ups!', 'Ha ocurrido un error al cerrar sesión', 'error');
     }).finally(() => {

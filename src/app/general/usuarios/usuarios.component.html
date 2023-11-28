@@ -11,8 +11,8 @@
                         </div>
                         <div class="lista-scrolleable card-body">
                             <div *ngFor="let usuario of listaUsuarios"
-                                class="d-flex align-items-center justify-content-between">
-                                <div class="btn btn-light card p-2 mx-2 my-3 shadow-sm col-md-9"
+                                class="d-flex align-items-center justify-content-center">
+                                <div class="btn btn-light card p-2 mx-2 my-3 shadow-sm w-75"
                                     (click)="descargarExcelIndividual(usuario)">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div class="d-flex flex-row justify-content-start">
@@ -34,10 +34,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <button *ngIf="usuario.habilitado===true" class="btn btn-secondary m-2"
+                                <div class="justify-content-center w-50">
+                                    <button *ngIf="usuario.habilitado===true" class="btn btn-secondary m-2 w-50"
                                         (click)="habilitarUsuario(usuario.mail, false)">DESHABILITAR</button>
-                                    <button *ngIf="usuario.habilitado===false" class="btn btn-secondary m-2"
+                                    <button *ngIf="usuario.habilitado===false" class="btn btn-secondary m-2 w-50"
                                         (click)="habilitarUsuario(usuario.mail, true)">HABILITAR</button>
                                 </div>
                             </div>
@@ -53,7 +53,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <!--HISTORIA CLÍNICA DE PACIENTES-->
                     <div *ngIf="verHistoria">

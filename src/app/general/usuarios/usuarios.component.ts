@@ -44,7 +44,7 @@ export class UsuariosComponent implements OnInit {
   descargarExcelIndividual(usuario: any) {
     Swal.fire({
       title: "¿Descargar archivo .xslx?",
-      html: "Descargar datos de <b>"+usuario.mail+"</b>",
+      html: "Descargar datos de <b>" + usuario.mail + "</b>",
       showCancelButton: true,
       confirmButtonText: "Descargar",
       cancelButtonText: "Cancelar",
@@ -60,7 +60,7 @@ export class UsuariosComponent implements OnInit {
           especialidad: usuario.especialidad,
           habilitado: usuario.habilitado
         };
-    
+
         this.excelService.generateExcel([usuarioOrdenado], 'usuario_' + usuario.mail, 'Usuarios');
         Swal.fire("Excel descargado", "", "success");
       }

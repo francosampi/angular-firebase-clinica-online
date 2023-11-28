@@ -1,8 +1,5 @@
 <div *ngIf="historiaClinica" class="d-flex flex-row flex-wrap justify-content-center">
     <div *ngFor="let historia of historiaClinica" class="card m-3">
-        <div class="card-header text-center">
-            <h3>{{historia.usuario.nombre}} {{historia.usuario.apellido}}</h3>
-        </div>
         <div class="card-body">
             <p>
                 <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}

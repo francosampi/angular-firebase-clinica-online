@@ -3,7 +3,7 @@
     <div *ngIf="usuarioLogeado" class="d-flex row justify-content-center align-items-center">
       <div class="d-flex row">
         <div class="col d-flex justify-content-end">
-          <img [src]="usuarioFoto" class="navbar-imagen-perfil-contenedor shadow-sm">
+          <img [src]="usuarioFoto ? usuarioFoto : '../../../assets/iconos/navbar/icono-navbar-usuario.png'" class="navbar-imagen-perfil-contenedor shadow-sm">
         </div>
         <div class="col">
           <p class="fw-bold text-secondary text-center">

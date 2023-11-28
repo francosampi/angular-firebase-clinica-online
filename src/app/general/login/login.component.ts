@@ -66,8 +66,6 @@ export class LoginComponent implements OnInit {
     this.form.value.email = usuario?.mail;
     this.form.value.password = "123456";
 
-    console.log(usuario?.mail);
-
     this.entrar();
   }
 
