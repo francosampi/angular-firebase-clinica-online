@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<button *ngIf="!sidebarAbierta" id="toggleSidebar" class="boton-sidebar btn btn-primary shadow-sm fw-bold"
+<button *ngIf="!sidebarAbierta" id="toggleSidebar" class="boton-sidebar btn btn-primary shadow-sm fw-bold" style="z-index: 9999;"
   (click)="sidebarAbierta=!sidebarAbierta">
   >
 </button>
@@ -29,7 +29,7 @@
 <header *ngIf="sidebarAbierta">
   <nav id="sidebarMenu" class="collapse d-lg-block sidebar bg-white">
 
-    <button class="boton-sidebar btn btn-primary shadow-sm fw-bold" (click)="sidebarAbierta=false">X</button>
+    <button class="boton-sidebar btn btn-primary shadow-sm fw-bold" style="z-index: 9999;" (click)="sidebarAbierta=false">X</button>
 
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4">

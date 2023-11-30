@@ -28,9 +28,9 @@
                             <hr>
                             <p>Especialidades: <b>{{usuarioDatos?.especialidad}}</b></p>
                             <hr>
-                            <p>Disponibilidad: <b>{{usuarioDatos?.disponibilidad}} minutos</b></p>
+                            <p>Disponibilidad: <b>Lun. a Vie. de 8:00 a 19:00/Sab. y Dom. de 8:00 a 14:00</b></p>
                             <div>
-                                Asignar disponibilidad horaria:
+                                Asignar duración de las consultas:
 
                                 <div class="input-group mb-3">
                                     <input type="number" class="form-control" placeholder="Ej: 30" min="5"
@@ -39,9 +39,12 @@
                                         <span class="input-group-text" id="basic-addon2">minutos</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-secondary w-100"
+                                <button class="btn btn-secondary w-100 m-2"
                                     (click)="asignarDisponibilidadHoraria(disponibilidadHoraria)">
-                                    Asignar
+                                    Asignar duración
+                                </button>
+                                <button class="btn btn-success w-100 m-2" (click)="descargarAtenciones()">
+                                    Descargar atenciones
                                 </button>
                             </div>
                         </div>
@@ -49,6 +52,19 @@
                             <button class="btn btn-info mt-3 w-100" (click)="verHistoria=true;">
                                 Historial clínico
                             </button>
+                            <div class="mt-3">
+                                <label for="opciones">Descarga sus <b>turnos realizados</b></label>
+                                <select class="form-select" [(ngModel)]="especialistaElegido">
+                                    <option *ngFor="let opcion of especialistas" [ngValue]="opcion">Turno(s) con
+                                            {{opcion.datosEsp.nombre + ' ' + opcion.datosEsp.apellido}}
+                                    </option>
+                                </select>
+                                <button class="btn btn-success mt-1 w-100"
+                                    (click)="descargarAtencionesDeEspecialista()"
+                                    [disabled]="!especialistaElegido">
+                                    Descargar excel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -9,32 +9,52 @@ export class PdfService {
 
   constructor() { }
 
-  generateAndDownloadTurnosPdf(usuario: any, filename: string): void {
+  generateAndDownloadPdf(data: any, filename: string): void {
     const doc = new jsPDF();
-    doc.text('Listado de turnos', 60, 20);
-    doc.text(usuario.userData.nombre + ' ' + usuario.userData.apellido, 60, 30);
 
     const imageUrl = '../../../assets/iconos/logo-hospital.png';
-    doc.addImage(imageUrl, 'JPEG', 5, 5, 40, 40);
+    doc.addImage(imageUrl, 'JPEG', 15, 5, 40, 40);
+    doc.text('Historia clínica', 60, 25);
 
-    usuario.turnosUser.forEach((element: { payload: { doc: { data: () => any; }; }; }) => {
-      console.log(element.payload.doc.data());
+    const getFormattedDate = () => {
+      return new Date().toLocaleDateString('es-ES');
+    };
+
+    const formattedDate = getFormattedDate();
+    doc.text(`Fecha de emisión: ${formattedDate}`, 60, 35);
+
+    const tableData: any[][] = [];
+
+    data.forEach((historiaClinica: any) => {
+
+      const registroData = [
+        historiaClinica.usuario.nombre + ' ' + historiaClinica.usuario.apellido,
+        historiaClinica.registro.fecha,
+        historiaClinica.usuario.obraSocial,
+        historiaClinica.registro.ficha.altura +' m.',
+        historiaClinica.registro.ficha.peso + ' kg.',
+        historiaClinica.registro.ficha.temperatura + ' °C',
+        historiaClinica.registro.ficha.presion + ' mmHg.',
+      ];
+
+      const adicionales = historiaClinica.registro.ficha.adicionales;
+
+      if (adicionales) {
+        const adicionalesKeys = Object.keys(adicionales);
+        const adicionalesValues = Object.values(adicionales);
+        const adicionalesArray = adicionalesKeys.map((key, index) => `${key}: ${adicionalesValues[index]}`);
+        registroData.push(adicionalesArray.join(', '));
+      }
+
+      tableData.push(registroData);
     });
 
-    const turnosUser: any[] = [];
-
-    /*
-      usuario.turnos.forEach(turno => {
-        turnosUser.push(turno);
-      });
-    */
-
-    autoTable(doc,
-      {
-        startY: 60,
-        head: [['Fecha', 'Especialidad', 'Estado']],
-        body: usuario.turnosUser,
-      });
+    autoTable(doc, {
+      startY: 60,
+      head: [['Paciente', 'Fecha', 'OS', 'Altura', 'Peso', 'Temp.', 'Presión', 'Adicionales']],
+      body: tableData,
+      theme: 'striped'
+    });
 
     doc.save(filename);
   }

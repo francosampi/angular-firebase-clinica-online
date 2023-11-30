@@ -1,34 +1,41 @@
-<div *ngIf="historiaClinica" class="d-flex flex-row flex-wrap justify-content-center">
-    <div *ngFor="let historia of historiaClinica" class="card m-3">
-        <div class="card-body">
-            <p>
-                <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}
-            </p>
-            <p>
-                <b>Obra social: </b>{{historia.usuario.obraSocial}}
-            </p>
-            <p>
-                <b>Altura: </b>{{historia.registro.ficha.altura}} m.
-            </p>
-            <p>
-                <b>Peso: </b>{{historia.registro.ficha.peso}} kg.
-            </p>
-            <p>
-                <b>Temperatura: </b>{{historia.registro.ficha.temperatura}} °C
-            </p>
-            <p>
-                <b>Presión: </b>{{historia.registro.ficha.presion}} mmHg.
-            </p>
-            <hr>
-            <div *ngFor="let adicional of historia.registro.ficha.adicionales | keyvalue">
-                <b>{{ adicional.key }}:</b> {{ adicional.value }}
+<div class="d-inline-flex flex-column align-items-start justify-content-center">
+    <button class="btn" style="border-radius: 100%;"
+    (click)="descargarPDFHistorial()">
+        <img src="../../../assets/iconos/icono-pdf.png" style="width: 50px;">
+    </button>
+    <div *ngIf="historiaClinica" class="d-flex flex-row flex-wrap justify-content-around w-100">
+        <div *ngFor="let historia of historiaClinica" class="card m-3">
+            <div class="card-body">
+                <p>
+                    <b>Nombre y apellido/s: </b>{{historia.usuario.nombre}} {{historia.usuario.apellido}}
+                </p>
+                <p>
+                    <b>Obra social: </b>{{historia.usuario.obraSocial}}
+                </p>
+                <p>
+                    <b>Altura: </b>{{historia.registro.ficha.altura}} m.
+                </p>
+                <p>
+                    <b>Peso: </b>{{historia.registro.ficha.peso}} kg.
+                </p>
+                <p>
+                    <b>Temperatura: </b>{{historia.registro.ficha.temperatura}} °C
+                </p>
+                <p>
+                    <b>Presión: </b>{{historia.registro.ficha.presion}} mmHg.
+                </p>
+                <hr>
+                <div *ngFor="let adicional of historia.registro.ficha.adicionales | keyvalue">
+                    <b>{{ adicional.key }}:</b> {{ adicional.value }}
+                </div>
             </div>
-        </div>
-        <div class="card-footer d-flex justify-content-end">
-            <i>{{historia.registro.fecha}}</i>
+            <div class="card-footer d-flex justify-content-end">
+                <i>{{historia.registro.fecha}}</i>
+            </div>
         </div>
     </div>
 </div>
+
 
 <div *ngIf="historiaClinica.length===0">
     <div class="card-body fw-bold text-danger">

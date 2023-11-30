@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HistoriaClinicaService } from 'src/app/services/historia-clinica/historia-clinica.service';
+import { PdfService } from 'src/app/services/pdf/pdf.service';
 import { UserService } from 'src/app/services/user/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-historia-clinica',
@@ -12,7 +14,7 @@ export class HistoriaClinicaComponent implements OnInit {
   @Input() usuarioObj?: { usuarioId?: string; especialistaId?: string; };
   historiaClinica: { usuario?: any, registro?: any }[] = [];
 
-  constructor(private historiaClinicaService: HistoriaClinicaService, private userService: UserService) { }
+  constructor(private historiaClinicaService: HistoriaClinicaService, private userService: UserService, private pdfService: PdfService) { }
 
   ngOnInit(): void {
 
@@ -25,6 +27,27 @@ export class HistoriaClinicaComponent implements OnInit {
           this.historiaClinica.push({ usuario: user, registro: registro.payload.doc.data() });
         });
       });
+    });
+  }
+
+  descargarPDFHistorial() {
+    Swal.fire({
+      title: "Archivo de usuario",
+      html: "Descargar historia clínica",
+      showCancelButton: true,
+      confirmButtonText: "Descargar historia clínica (.pdf)",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+
+      try {
+        if (result.isConfirmed) {
+          this.pdfService.generateAndDownloadPdf(this.historiaClinica, 'historia_clinica');
+          Swal.fire("PDF descargado", "", "success");
+        }
+      } catch (error) {
+        Swal.fire("¡Ups!", "Error al descargar archivos...", 'error');
+        console.log(error);
+      }
     });
   }
 }

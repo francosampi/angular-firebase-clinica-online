@@ -15,27 +15,20 @@ export class HistoriaClinicaService {
   }
 
   getHistoriaClinica(idPaciente: string | undefined, idEspecialista: string | undefined): Observable<any> {
-    let observable = this.firestore
-      .collection('historia-clinica', ref => ref
-        .orderBy('fecha', 'desc'))
-      .snapshotChanges();
+    let query = this.firestore.collection('historia-clinica', ref => {
+      let baseQuery = ref.orderBy('fecha', 'desc');
 
-    if (idEspecialista) {
       if (idPaciente) {
-        observable = this.firestore
-          .collection('historia-clinica', ref => ref
-            .where('idEspecialista', '==', idEspecialista)
-            .where('idPaciente', '==', idPaciente)
-            .orderBy('fecha', 'desc'))
-          .snapshotChanges();
+        baseQuery = baseQuery.where('idPaciente', '==', idPaciente);
       }
-      else {
-        observable = this.firestore
-          .collection('historia-clinica', ref => ref
-            .where('idEspecialista', '==', idEspecialista)
-            .orderBy('fecha', 'desc')).snapshotChanges();
+
+      if (idEspecialista) {
+        baseQuery = baseQuery.where('idEspecialista', '==', idEspecialista);
       }
-    }
-    return observable;
+
+      return baseQuery;
+    });
+
+    return query.snapshotChanges();
   }
 }

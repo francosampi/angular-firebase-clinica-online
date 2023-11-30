@@ -354,8 +354,6 @@ export class TurnosComponent implements OnInit {
       });
     }
 
-    console.log(historiaClinica);
-
     if (turno.id) {
       this.turnosService.updateTurnoById(turno.id, 'Finalizado', '', diagnostico).then(() => {
 

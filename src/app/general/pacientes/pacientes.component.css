@@ -1,0 +1,4 @@
+.lista-scrolleable {
+    height: 70vh;
+    overflow: auto;
+}
