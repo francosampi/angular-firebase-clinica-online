@@ -5,6 +5,7 @@ import { slideInAnimation } from 'src/app/animations/slideIn';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EspecialistaService } from 'src/app/services/especialista/especialista.service';
 import { ExcelService } from 'src/app/services/excel/excel.service';
+import { PdfService } from 'src/app/services/pdf/pdf.service';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
 import { UserService } from 'src/app/services/user/user.service';
 import Swal from 'sweetalert2';
@@ -29,8 +30,8 @@ export class PerfilComponent implements OnInit {
   turnos: any[] = [];
   spinner: boolean = false;
 
-  constructor(private authService: AuthService, private userService: UserService,
-    private especialistaService: EspecialistaService, private turnosService: TurnosService, private excelService: ExcelService) { }
+  constructor(private authService: AuthService, private userService: UserService, private especialistaService: EspecialistaService,
+    private turnosService: TurnosService, private excelService: ExcelService, private pdfService: PdfService) { }
 
   ngOnInit(): void {
     this.authService.getCurrentUser()
@@ -86,18 +87,20 @@ export class PerfilComponent implements OnInit {
                             turnos.forEach((elemento: { payload: { doc: { data: () => any; }; }; }) => {
                               const datosTurnoEspecialista = elemento.payload.doc.data();
 
-                              const turnosObj = {
-                                fecha: datosTurnoEspecialista.fecha,
-                                especialidad: datosTurnoEspecialista.especialidad,
-                                observacion: datosTurnoEspecialista.diagnostico?.observacion ? datosTurnoEspecialista.diagnostico?.observacion : '-',
-                                tratamiento: datosTurnoEspecialista.diagnostico?.tratamiento ? datosTurnoEspecialista.diagnostico?.tratamiento : '-',
-                                estado: datosTurnoEspecialista.estado,
-                                motivo: datosTurnoEspecialista.motivo,
-                              };
+                              if (datosTurnoEspecialista.estado === 'Activo' || datosTurnoEspecialista.estado === 'Finalizado') {
+                                const turnosObj = {
+                                  fecha: datosTurnoEspecialista.fecha,
+                                  especialista: datosEsp.nombre + ' ' + datosEsp.apellido,
+                                  especialidad: datosTurnoEspecialista.especialidad,
+                                  observacion: datosTurnoEspecialista.diagnostico?.observacion ? datosTurnoEspecialista.diagnostico?.observacion : '-',
+                                  tratamiento: datosTurnoEspecialista.diagnostico?.tratamiento ? datosTurnoEspecialista.diagnostico?.tratamiento : '-',
+                                  estado: datosTurnoEspecialista.estado,
+                                };
 
-                              if (datosTurnoEspecialista.idEspecialista === idEspecialista) {
-                                turnosEspecialista.push(turnosObj);
-                              };
+                                if (datosTurnoEspecialista.idEspecialista === idEspecialista) {
+                                  turnosEspecialista.push(turnosObj);
+                                };
+                              }
                             });
 
                             const pacienteRegistro = { datosEsp, turnosEspecialista };
@@ -124,7 +127,6 @@ export class PerfilComponent implements OnInit {
                         observacion: turnoData.diagnostico?.observacion ? turnoData.diagnostico?.observacion : '-',
                         tratamiento: turnoData.diagnostico?.tratamiento ? turnoData.diagnostico?.tratamiento : '-',
                         estado: turnoData.estado,
-                        motivo: turnoData.motivo,
                       };
 
                       this.userService.getUserByUid(idPaciente).subscribe((user) => {
@@ -178,7 +180,7 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  descargarAtencionesDeEspecialista() {
+  descargarAtencionesDeEspecialistaExcel() {
     Swal.fire({
       title: "Archivo de paciente",
       html: "Descargar turnos realizados con " + this.especialistaElegido.datosEsp.nombre + ' ' + this.especialistaElegido.datosEsp.apellido,
@@ -191,6 +193,26 @@ export class PerfilComponent implements OnInit {
         try {
           this.excelService.generateExcel(this.especialistaElegido.turnosEspecialista, 'turnos_' + this.usuarioDatos.mail, 'Turnos');
           Swal.fire("Excel descargado", "", "success");
+        } catch (error) {
+          Swal.fire("¡Ups!", "Error al descargar archivos...", 'error');
+        }
+      }
+    });
+  }
+
+  descargarAtencionesDeEspecialistaPDF() {
+    Swal.fire({
+      title: "Archivo de paciente",
+      html: "Descargar turnos realizados con " + this.especialistaElegido.datosEsp.nombre + ' ' + this.especialistaElegido.datosEsp.apellido,
+      showCancelButton: true,
+      denyButtonColor: '#4ED280',
+      confirmButtonText: "Descargar datos (.pdf)",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          this.pdfService.generateTurnosPdf(this.especialistaElegido.turnosEspecialista, 'turnos_' + this.usuarioDatos.mail+'.pdf');
+          Swal.fire("PDF descargado", "", "success");
         } catch (error) {
           Swal.fire("¡Ups!", "Error al descargar archivos...", 'error');
         }

@@ -41,7 +41,7 @@ export class HistoriaClinicaComponent implements OnInit {
 
       try {
         if (result.isConfirmed) {
-          this.pdfService.generateAndDownloadPdf(this.historiaClinica, 'historia_clinica');
+          this.pdfService.generateHistoriaClinicaPdf(this.historiaClinica, 'historia_clinica');
           Swal.fire("PDF descargado", "", "success");
         }
       } catch (error) {

@@ -11,7 +11,6 @@ export class CapizalizarPipe implements PipeTransform {
       return '';
     }
 
-    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();;
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
   }
-
 }

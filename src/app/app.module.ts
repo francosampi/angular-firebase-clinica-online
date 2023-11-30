@@ -14,7 +14,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environments';
 import { NavbarModule } from './general/navbar/navbar.module';
 import { FooterModule } from './general/footer/footer.module';
-import { CapitalizacionDirective } from './directives/capitalizacion.directive';
+import { CapitalizacionDirective } from './directives/capitalizacion/capitalizacion.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 

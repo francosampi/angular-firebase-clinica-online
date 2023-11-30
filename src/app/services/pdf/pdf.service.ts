@@ -9,7 +9,7 @@ export class PdfService {
 
   constructor() { }
 
-  generateAndDownloadPdf(data: any, filename: string): void {
+  generateHistoriaClinicaPdf(data: any, filename: string): void {
     const doc = new jsPDF();
 
     const imageUrl = '../../../assets/iconos/logo-hospital.png';
@@ -31,7 +31,7 @@ export class PdfService {
         historiaClinica.usuario.nombre + ' ' + historiaClinica.usuario.apellido,
         historiaClinica.registro.fecha,
         historiaClinica.usuario.obraSocial,
-        historiaClinica.registro.ficha.altura +' m.',
+        historiaClinica.registro.ficha.altura + ' m.',
         historiaClinica.registro.ficha.peso + ' kg.',
         historiaClinica.registro.ficha.temperatura + ' °C',
         historiaClinica.registro.ficha.presion + ' mmHg.',
@@ -52,6 +52,48 @@ export class PdfService {
     autoTable(doc, {
       startY: 60,
       head: [['Paciente', 'Fecha', 'OS', 'Altura', 'Peso', 'Temp.', 'Presión', 'Adicionales']],
+      body: tableData,
+      theme: 'striped'
+    });
+
+    doc.save(filename);
+  }
+
+  generateTurnosPdf(data: any, filename: string): void {
+    const doc = new jsPDF();
+
+    const imageUrl = '../../../assets/iconos/logo-hospital.png';
+    doc.addImage(imageUrl, 'JPEG', 15, 5, 40, 40);
+    doc.text('Turnos realizados', 60, 25);
+
+    const getFormattedDate = () => {
+      return new Date().toLocaleDateString('es-ES');
+    };
+
+    const formattedDate = getFormattedDate();
+    doc.text(`Fecha de emisión: ${formattedDate}`, 60, 35);
+
+    const tableData: any[][] = [];
+
+    console.log(data);
+
+    data.forEach((turno: any) => {
+
+      const registroData = [
+        turno.fecha,
+        turno.especialidad,
+        turno.especialista,
+        turno.observacion,
+        turno.tratamiento,
+        turno.estado
+      ];
+
+      tableData.push(registroData);
+    });
+
+    autoTable(doc, {
+      startY: 60,
+      head: [['Fecha', 'Especialidad', 'Especialista', 'Observación', 'Tratamiento', 'Estado']],
       body: tableData,
       theme: 'striped'
     });

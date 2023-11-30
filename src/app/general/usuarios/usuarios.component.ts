@@ -47,7 +47,9 @@ export class UsuariosComponent implements OnInit {
             const turnoInfo = {
               fecha: data.fecha,
               especialidad: data.especialidad,
-              estado: data.estado
+              estado: data.estado,
+              observacion: data.diagnostico?.observacion ? data.diagnostico?.observacion : '-',
+              tratamiento: data.diagnostico?.tratamiento ? data.diagnostico?.tratamiento : '-',
             };
 
             this.userService.getUserByUid(data.idEspecialista).subscribe((especialista) => {
